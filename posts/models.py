@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.shortcuts import render, get_object_or_404
 # Create your models here.
 import datetime
 # Create your models here.
@@ -10,7 +10,7 @@ from django.contrib.auth.models import User
 class Post(models.Model):
     post_body = models.CharField(max_length=200)
     post_title = models.CharField(max_length=120)
-    pub_date = models.DateTimeField('date published')
+    pub_date = models.DateTimeField('date published', default=timezone.now())
     like_count = models.IntegerField(default=0)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
