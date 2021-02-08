@@ -12,7 +12,7 @@ title="My first post"
 
 def create_post(body, title, author, days=0):
     time = timezone.now() + datetime.timedelta(days=days)
-    return Post.objects.get_or_create(post_body=body, post_title=title, pub_date=time,author=author)
+    return Post.objects.get_or_create(post_body=body, post_title=title, pub_date=time,author=author)[0]
 
 def create_user():
     try:
@@ -23,21 +23,41 @@ def create_user():
 
 # Create your tests here.
 class PostsDetailView(TestCase):
+    def setUp(self):
+        user = create_user()
 
     def test_detail_view_shows_body(self):
-        user = create_user()
-        post = create_post(body_sample, title, user )
+        user = User.objects.get(email="youcantseeme@wwe.com")
+        post = create_post(body_sample, title, user)
         url = reverse('posts:detail', args=(post.id,))
         response = self.client.get(url)
-        self.assertContains(response, post.post_body)
+        self.assertContains(response, body_sample)
 
     def test_does_not_show_if_pub_date_in_future(self):
-        user = create_user()
-        post = create_post(body_sample, title, user, 4 )
+        user = User.objects.get(email="youcantseeme@wwe.com")
+        post = create_post(body_sample, title, user, 4)
         url = reverse('posts:detail', args=(post.id,))
         response = self.client.get(url)
-        self.assertEqual(response.status, 404)
+        self.assertEqual(response.status_code, 404)
+
+    def test_that_like_button_works(self):
+        pass
 
 class PostsIndexView(TestCase):
-    def test_shows_most_recent_posts(self):
-        self.assertEqual(1+1, 2)
+    def setUp(self):
+            user = create_user()
+
+    def test_future_posts_are_not_included(self):
+        user = User.objects.get(email="youcantseeme@wwe.com")
+        post = create_post(body_sample, title, user, -4)
+        future_post = create_post("You never know what you are going to get", "Life is a box of chocolates", user, 3)
+        response = self.client.get(reverse('posts:index'))
+        self.assertQuerysetEqual(
+                    response.context['latest_post_list'],
+                    ['<Post: Life is a box of chocolates.>']
+                )
+
+    def test_if_no_posts_display_message(self):
+        response = self.client.get(reverse('posts:index'))
+        self.assertContains(response, "No posts are available.")
+
