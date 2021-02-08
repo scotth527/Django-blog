@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
+from django.utils import timezone
 # Create your models here.
 class Profile(models.Model):
     first_name = models.CharField(max_length=50)
@@ -8,7 +9,7 @@ class Profile(models.Model):
     address = models.CharField(max_length=50)
     city = models.CharField(max_length=50, default="Miami")
     state = models.CharField(max_length=50, default="FL")
-    birthday = models.DateField(auto_now=False, auto_now_add=False)
+    birthday = models.DateField(auto_now=False, auto_now_add=False, default=timezone.now())
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
