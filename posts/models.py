@@ -15,7 +15,7 @@ class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.post_body
+        return self.post_title
 
     def was_published_recently(self):
        now = timezone.now()

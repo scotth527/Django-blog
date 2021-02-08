@@ -7,8 +7,15 @@ from django.views import generic
 from .models import Post, Comment
 
 
-def index(request):
-    return HttpResponse("Hello, world. You're at the polls index.")
+class IndexView(generic.ListView):
+    template_name = 'posts/index.html'
+    context_object_name = 'latest_post_list'
+
+    def get_queryset(self):
+        """Return the last five posts."""
+        # pub_date__lte means less than or equal to, today
+        return Post.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')[:5]
+
 
 class DetailView(generic.DetailView):
     model = Post
