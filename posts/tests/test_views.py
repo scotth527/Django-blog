@@ -49,8 +49,8 @@ class PostsIndexView(TestCase):
 
     def test_future_posts_are_not_included(self):
         user = User.objects.get(email="youcantseeme@wwe.com")
-        post = create_post(body_sample, title, user, -4)
-        future_post = create_post("You never know what you are going to get", "Life is a box of chocolates", user, 3)
+        future_post = create_post(body_sample, title, user, 4)
+        past_post = create_post("You never know what you are going to get", "Life is a box of chocolates.", user, -3)
         response = self.client.get(reverse('posts:index'))
         self.assertQuerysetEqual(
                     response.context['latest_post_list'],
@@ -60,4 +60,13 @@ class PostsIndexView(TestCase):
     def test_if_no_posts_display_message(self):
         response = self.client.get(reverse('posts:index'))
         self.assertContains(response, "No posts are available.")
+
+    def test_past_posts_included(self):
+        user = User.objects.get(email="youcantseeme@wwe.com")
+        post = create_post("You never know what you are going to get", "Life is a box of chocolates.", user, -3)
+        response = self.client.get(reverse('posts:index'))
+        self.assertContains(response, "Life is a box of chocolates.")
+
+    def test_only_shows_posts_from_people_you_follow(self):
+        pass
 

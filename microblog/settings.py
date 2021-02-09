@@ -110,7 +110,7 @@ LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 
 USE_I18N = True
-
+DATE_FORMAT = "Y-m-d"
 USE_L10N = True
 
 USE_TZ = True
