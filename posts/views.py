@@ -5,8 +5,9 @@ from django.urls import reverse
 from django.utils import timezone
 from django.views import generic
 from .models import Post, Comment
+# from django.contrib.auth.decorators import login_required
 
-
+# @login_required
 class IndexView(generic.ListView):
     template_name = 'posts/index.html'
     context_object_name = 'latest_post_list'
@@ -16,7 +17,7 @@ class IndexView(generic.ListView):
         # pub_date__lte means less than or equal to, today
         return Post.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')[:5]
 
-
+# @login_required
 class DetailView(generic.DetailView):
     model = Post
     template_name = 'posts/detail.html'
