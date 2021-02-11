@@ -71,7 +71,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'microblog.wsgi.application'
 
-
+LOGIN_REDIRECT_URL = '/'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
@@ -110,7 +110,7 @@ LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 
 USE_I18N = True
-DATE_FORMAT = "Y-m-d"
+DATE_FORMAT = "m-d-Y"
 USE_L10N = True
 
 USE_TZ = True
