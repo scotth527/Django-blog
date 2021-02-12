@@ -23,6 +23,7 @@ def signup(request):
             return redirect('posts:index')
     else:
         form = SignUpForm()
+
     return render(request, 'profiles/signup.html', {'form': form})
 
 def signin(request):
@@ -45,4 +46,5 @@ def signin(request):
 
 def logout_view(request):
     logout(request)
+    return redirect('profiles:login')
     # Redirect to a success page.

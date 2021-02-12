@@ -6,21 +6,28 @@ from django.utils import timezone
 from django.views import generic
 from .models import Post, Comment
 # from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.contrib.auth.mixins import LoginRequiredMixin
 
-# @login_required
-class IndexView(generic.ListView):
+class IndexView(LoginRequiredMixin,generic.ListView):
     template_name = 'posts/index.html'
     context_object_name = 'latest_post_list'
+    login_url = '/profiles/login'
+    redirect_field_name = 'redirect_to'
 
     def get_queryset(self):
         """Return the last five posts."""
         # pub_date__lte means less than or equal to, today
+        print("Testing authentication", self.request.user.is_authenticated)
+
         return Post.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')[:5]
 
-# @login_required
-class DetailView(generic.DetailView):
+class DetailView(LoginRequiredMixin,generic.DetailView):
     model = Post
     template_name = 'posts/detail.html'
+    login_url = '/profiles/login'
+    redirect_field_name = 'redirect_to'
 
     def get_queryset(self):
             """

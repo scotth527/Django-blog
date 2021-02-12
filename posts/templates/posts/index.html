@@ -1,8 +1,11 @@
-
+{% extends "base.html" %}
 {% load static %}
 
 <link rel="stylesheet" type="text/css" href="{% static 'posts/style.css' %}">
 
+
+
+{% block content %}
 <h1>Blog Feed</h1>
 {% if latest_post_list %}
 <div class="post">
@@ -14,3 +17,5 @@
 {% else %}
 <p>No posts are available.</p>
 {% endif %}
+
+{% endblock %}
