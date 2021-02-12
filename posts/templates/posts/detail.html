@@ -1,5 +1,10 @@
 
+
+{% extends "base.html" %}
+
+{% block content %}
 <h1>{{ post.post_title}}</h1>
 <h5>By: {{ post.author.username }}</h5>
 <div>Date Published: {{post.pub_date}}</div>
 <p>{{post.post_body}}</p>
+{% endblock %}
