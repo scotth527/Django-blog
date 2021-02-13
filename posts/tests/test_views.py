@@ -3,26 +3,14 @@ from posts.models import Post
 from profiles.models import Profile
 from django.utils import timezone
 from django.shortcuts import render
-
+from profiles.tests.helpers.utils import login, create_user
+from posts.tests.helpers.utils import create_post
 from django.urls import reverse
 from django.contrib.auth.models import User
 import datetime
+
 body_sample = "Cool thanks for reading"
 title="My first post"
-
-def create_post(body, title, author, days=0):
-    time = timezone.now() + datetime.timedelta(days=days)
-    return Post.objects.get_or_create(post_body=body, post_title=title, pub_date=time,author=author)[0]
-
-def create_user():
-    try:
-        return User.objects.create_user('john', 'youcantseeme@wwe.com', 'johnpassword')
-        profile = Profile.objects.get_or_create(first_name="John", last_name="Cena", address="123 Fake Street", city="Miami", state="FL", user=user)
-    except:
-        return User.objects.get(email = 'youcantseeme@wwe.com')
-
-def login(client):
-    client.login(username='john', password='johnpassword')
 
 # Create your tests here.
 class PostsDetailView(TestCase):
@@ -49,7 +37,7 @@ class PostsDetailView(TestCase):
     def test_that_like_button_works(self):
         pass
 
-    def test_that_if_user_is_not_logged_in_gets_404(self):
+    def test_that_if_user_is_not_logged_in_gets_redirected(self):
         user = User.objects.get(email="youcantseeme@wwe.com")
         post = create_post(body_sample, title, user, 4)
         url = reverse('posts:detail', args=(post.id,))
