@@ -18,4 +18,5 @@ class SignUpForm(UserCreationForm):
         fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2', )
 
 class SignInForm(AuthenticationForm):
-    username = forms.CharField(max_length=30, required=True, help_text='Username')
+    pass
+    # username = forms.CharField(max_length=30, required=True, help_text='Username')

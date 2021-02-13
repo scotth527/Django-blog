@@ -1,7 +1,7 @@
 # Create your views here.
 from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render, redirect
-
+from django.contrib import messages
 from profiles.forms import SignUpForm, SignInForm
 
 def signup(request):
@@ -39,7 +39,9 @@ def signin(request):
 
         else:
             # Return an 'invalid login' error message.
-            return render(request, 'profiles/signin.html', {'form': form})
+            messages.error(request,'Username or password not correct.')
+            return redirect('profiles:login')
+
     else:
         return render(request, 'profiles/signin.html', {'form': form})
     pass
