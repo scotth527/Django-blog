@@ -1,2 +1,13 @@
+{% extends "base.html" %}
 {% block content %}
+<h1>{{ profile.user.username }}</h1>
+
+{% if error_message %}<p><strong>{{error_message}}</strong></p>{% endif %}
+
+<!--Action is what should happen after submit -->
+<div>
+    <p>{{profile.first_name}}</p>
+    <p>{{profile.last_name}}</p>
+    <p>{{profile.user.email}}</p>
+</div>
 {% endblock %}

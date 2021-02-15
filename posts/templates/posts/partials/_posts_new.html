@@ -1,9 +1,8 @@
-
-{% block content %}
-<h2>Sign up</h2>
-<form method="post">
+<form method="post" action="/posts/create">
     {% csrf_token %}
+    {{form}}
     {% for field in form %}
+    {{ field }}
     <p>
         {{ field.label_tag }}<br>
         {{ field }}
@@ -15,7 +14,5 @@
     {% endfor %}
     </p>
     {% endfor %}
-    <button type="submit">Sign up</button>
-    <a href="{% url 'profiles:login' %}">Already a user</a>
+    <button type="submit">Post</button>
 </form>
-{% endblock %}

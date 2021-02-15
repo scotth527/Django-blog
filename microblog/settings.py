@@ -72,6 +72,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'microblog.wsgi.application'
 
 LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = '/profiles/login/'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 

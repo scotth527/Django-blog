@@ -7,10 +7,14 @@
 
 {% block content %}
 <h1>Blog Feed</h1>
+
+{% include 'posts/partials/_posts_new.html' %}
+
 {% if latest_post_list %}
 <div class="post">
     {% for post in latest_post_list %}
     <h4><a href="{% url 'posts:detail' post.id %}">{{ post.post_title }}</a></h4>
+    <p>By: <a href="{% url 'profiles:detail' post.author.id %}">{{post.author.username}}</a></p>
     <p>{{post.post_body}}</p>
     {% endfor %}
 </div>

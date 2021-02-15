@@ -9,12 +9,14 @@ from .models import Post, Comment
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.contrib.auth.mixins import LoginRequiredMixin
+from posts.forms import PostsForm
 
 class IndexView(LoginRequiredMixin,generic.ListView):
     template_name = 'posts/index.html'
     context_object_name = 'latest_post_list'
-    login_url = '/profiles/login'
-    redirect_field_name = 'redirect_to'
+    form = PostsForm()
+    # login_url = '/profiles/login'
+    # redirect_field_name = 'redirect_to'
 
     def get_queryset(self):
         """Return the last five posts."""
@@ -26,11 +28,29 @@ class IndexView(LoginRequiredMixin,generic.ListView):
 class DetailView(LoginRequiredMixin,generic.DetailView):
     model = Post
     template_name = 'posts/detail.html'
-    login_url = '/profiles/login'
-    redirect_field_name = 'redirect_to'
+    # login_url = '/profiles/login'
+    # redirect_field_name = 'redirect_to'
 
     def get_queryset(self):
             """
             Excludes any questions that aren't published yet.
             """
             return Post.objects.filter(pub_date__lte=timezone.now())
+
+def create_post(request):
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = PostsForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            # ...
+            # redirect to a new URL:
+            return redirect('posts:index')
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = PostsForm()
+
+    return render(request, 'index.html', {'form': form})
