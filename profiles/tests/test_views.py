@@ -8,16 +8,20 @@ import unittest
 class ProfileDetailView(TestCase):
     def setUp(self):
                 self.client = Client()
+                create_user()
 
-    @unittest.skip("test not done yet")
     def test_profile_detail_works(self):
         go_to_login = self.client.get("/profiles/login/")
         self.assertEqual(go_to_login.status_code, 200)
         login(self.client)
-        profile_detail_response = self.client.get('/profiles/detail/')
-        # f"Shepherd {shepherd} is {age} years old."
-        assertContains(profile_detail_response, "john")
-        pass
+        user = User.objects.get(email="youcantseeme@wwe.com")
+        profile_detail_response = self.client.get(f'/profiles/{user.id}/')
+        self.assertContains(profile_detail_response, "john")
+
+    def test_profile_detail_for_redirect_if_no_authentication(self):
+        user = User.objects.get(email="youcantseeme@wwe.com")
+        profile_detail_response = self.client.get(f'/profiles/{user.id}/', follow=True)
+        self.assertRedirects(profile_detail_response, f'/profiles/login/?next=/profiles/{user.id}/', status_code=302, target_status_code=200)
 
 class SignUpView(TestCase):
     def setUp(self):
@@ -37,7 +41,6 @@ class SignUpView(TestCase):
                                                     "state" : "Fl"
                                                     }, follow = True
                                            )
-        print("Registration", signup_response)
         self.assertEqual(signup_response.status_code, 200)
 
     def test_error_message_if_invalid_password(self):
@@ -50,23 +53,19 @@ class LoginView(TestCase):
     def setUp(self):
             self.client = Client()
 
-    @unittest.skip("skip the test")
     def test_successful_login(self):
         response = self.client.get("/profiles/login/")
         self.assertEqual(response.status_code, 200)
-        login_response = self.client.post(
-                    "/profiles/login/", data={"username": "john", "password" :"johnpassword"}
-                )
-        self.assertRedirects(login_response, '/posts/index/', status_code=302, target_status_code=200)
-        pass
+        login_response = self.client.post("/profiles/login/",  {"username": "john", "password" :"johnpassword"}, follow=True, secure=True)
+        self.assertEqual(login_response.status_code, 200)
 
-    @unittest.skip("skip the test")
+    # @unittest.skip("skip the test")
     def test_success_login_redirects_to_posts_index(self):
         login_response = self.client.post(
-                                    "/profiles/login/", data={"username": "john", "password" :"johnpassword"}
+                                    "/profiles/login/", data={"username": "john", "password" :"johnpassword"}, follow=True, secure=True
                                 )
-        print("Login Response on line 42", login_response)
-        self.assertRedirects(login_response, '/posts/index/', status_code=302, target_status_code=200)
+        print("Login Response on line 42", login_response.content)
+        self.assertRedirects(login_response, '/posts/', status_code=302, fetch_redirect_response=True)
         pass
 
     def test_incorrect_password_shows_errors(self):
@@ -87,7 +86,6 @@ class LogoutView(TestCase):
                             "/profiles/login/", data={"username": "john", "password" :"johnpassword"}
                         )
         logout_response = self.client.get('/profiles/logout/', follow=True)
-        print("Logout response", logout_response.status_code)
         self.assertRedirects(logout_response, '/profiles/login/', status_code=302, target_status_code=200, fetch_redirect_response=True)
 
 

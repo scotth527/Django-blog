@@ -2,7 +2,14 @@
 from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from profiles.forms import SignUpForm, SignInForm
+from profiles.forms import SignUpForm
+from django.views import generic
+from django.contrib.auth.models import User
+from .models import Profile
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponse, HttpResponseRedirect
+from django.urls import reverse
+from django.contrib.auth.forms import AuthenticationForm
 
 def signup(request):
     if request.method == 'POST':
@@ -20,14 +27,15 @@ def signup(request):
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=user.username, password=raw_password)
             login(request, user)
-            return redirect('posts:index')
+            return redirect('/posts/')
     else:
         form = SignUpForm()
 
     return render(request, 'profiles/signup.html', {'form': form})
 
+
 def signin(request):
-    form = SignInForm()
+    form = AuthenticationForm()
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -48,5 +56,17 @@ def signin(request):
 
 def logout_view(request):
     logout(request)
-    return redirect('profiles:login')
+    return HttpResponseRedirect(reverse('profiles:login'))
     # Redirect to a success page.
+
+class DetailView(LoginRequiredMixin, generic.DetailView):
+    model = Profile
+    template_name = 'profiles/detail.html'
+    # login_url = '/profiles/login'
+    # redirect_field_name = 'redirect_to'
+
+    def get_queryset(self):
+            """
+            TODO Determine criteria for filtering
+            """
+            return Profile.objects

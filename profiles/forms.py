@@ -5,18 +5,15 @@ import datetime
 #from django.contrib.auth import LoginView
 
 class SignUpForm(UserCreationForm):
-    first_name = forms.CharField(max_length=30, required=True, help_text='Optional.')
-    last_name = forms.CharField(max_length=30, required=True, help_text='Optional.')
-    address = forms.CharField(max_length=30, required=True, help_text='Optional.')
-    city = forms.CharField(max_length=30, required=True, help_text='Optional.')
-    state = forms.CharField(max_length=30, required=True, help_text='Optional.')
-    birthday = forms.DateField(initial=datetime.date.today)
-    email = forms.EmailField(max_length=254, help_text='Required. Inform a valid email address.')
+    first_name = forms.CharField(max_length=30, required=True)
+    last_name = forms.CharField(max_length=30, required=True)
+    address = forms.CharField(max_length=30, required=True)
+    city = forms.CharField(max_length=30, required=True)
+    state = forms.CharField(max_length=30, required=True)
+    birthday = forms.DateField(initial=datetime.date.today, required=True, widget=forms.SelectDateWidget())
+    email = forms.EmailField(max_length=254, required=True, widget=forms.TextInput(attrs={'placeholder': 'E.g. example@aol.com'}) )
 
     class Meta:
         model = User
         fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2', )
 
-class SignInForm(AuthenticationForm):
-    pass
-    # username = forms.CharField(max_length=30, required=True, help_text='Username')
