@@ -11,6 +11,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.forms import AuthenticationForm
 
+
 def signup(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)

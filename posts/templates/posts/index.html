@@ -8,7 +8,7 @@
 {% block content %}
 <h1>Blog Feed</h1>
 
-{% include 'posts/partials/_posts_new.html' %}
+{% include 'posts/partials/_posts_new.html' with form=form %}
 
 {% if latest_post_list %}
 <div class="post">
