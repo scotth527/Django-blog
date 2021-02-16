@@ -1,8 +1,7 @@
-<form method="post" action="/posts/create">
+<form method="post" action="/posts/create/">
     {% csrf_token %}
-    {{form}}
+
     {% for field in form %}
-    {{ field }}
     <p>
         {{ field.label_tag }}<br>
         {{ field }}
