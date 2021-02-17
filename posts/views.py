@@ -12,6 +12,8 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import ModelFormMixin
 from posts.forms import PostsForm
+from django.contrib import messages
+
 
 
 class IndexView(LoginRequiredMixin, generic.ListView ):
@@ -48,14 +50,20 @@ class DetailView(LoginRequiredMixin,generic.DetailView):
 def create_post(request):
     # if this is a POST request we need to process the form data
     user = get_object_or_404(User, pk=request.user.id)
+    print(request.POST)
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
+
         form = PostsForm(request.POST)
         # check whether it's valid:
+
         if form.is_valid():
             # process the data in form.cleaned_data as required
             # ...
-            print("This is the form", form)
+            post = form.save(commit=False)
+            post.author = request.user
+            post.save()
+            messages.success(request, 'Form submission successful')
             # redirect to a new URL:
             return redirect('posts:index')
 
@@ -63,4 +71,4 @@ def create_post(request):
     else:
         form = PostsForm()
 
-    return render(request, 'index.html', {'form': form})
+    return render(request, 'posts/index.html', {'form': form})
