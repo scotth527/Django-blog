@@ -17,7 +17,9 @@
     </p>
     {% endfor %}
     {% if messages %}
-    <p style="color: red">Username or password is incorrect.</p>
+    {% for message in messages %}
+    <p style="color: red">{{message}}</p>
+    {% endfor %}
     {% endif %}
     <button type="submit">Log in</button>
     <a href="{% url 'profiles:signup' %}">New to My Site? Sign up</a>

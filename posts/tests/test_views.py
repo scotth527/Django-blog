@@ -2,7 +2,7 @@ from django.test import TestCase, Client
 from posts.models import Post
 from profiles.models import Profile
 from django.utils import timezone
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from profiles.tests.helpers.utils import login, create_user
 from posts.tests.helpers.utils import create_post
 from django.urls import reverse
@@ -13,6 +13,28 @@ body_sample = "Cool thanks for reading"
 title="My first post"
 
 # Create your tests here.
+class PostCreateView(TestCase):
+    def setUp(self):
+        self.client = Client()
+        user = create_user()
+
+    def test_successful_creation_of_new_post_from_index(self):
+        user = User.objects.get(email="youcantseeme@wwe.com")
+        login(self.client)
+        go_to_index = self.client.get("/posts/")
+        self.assertEqual(go_to_index.status_code, 200)
+        post_response = self.client.post('/posts/create/', data={
+                                                            "post_body":"Example",
+                                                            "post_title":"You cannot see me" ,
+                                                            "author": f"{user.id}" }
+                                        )
+        # new_post = Post.objects.get(post_title="You cannot see me")
+        # print("New Post", new_post)
+        self.assertEqual(post_response.status_code, 200)
+        go_to_index = self.client.get("/posts/")
+        print("Index file", go_to_index)
+        self.assertContains(go_to_index, "You cannot see me")
+
 class PostsDetailView(TestCase):
     def setUp(self):
         user = create_user()
