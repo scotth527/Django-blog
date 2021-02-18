@@ -74,7 +74,6 @@ class LoginView(TestCase):
                             "/profiles/login/", data={"username": "john", "password" :"fdsafdsafdsd"}, follow=True
                         )
         self.assertRedirects(login_response, '/profiles/login/')
-        print("LOGIN RESPONSE", list(str(login_response.context['messages'][0]))
         self.assertContains(login_response, "Username or password is incorrect.")
 
 

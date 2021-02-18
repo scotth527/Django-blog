@@ -1,4 +1,4 @@
-from django.test import TestCase, Client
+from django.test import TestCase, Client, RequestFactory
 from posts.models import Post
 from profiles.models import Profile
 from django.utils import timezone
@@ -23,17 +23,19 @@ class PostCreateView(TestCase):
         login(self.client)
         go_to_index = self.client.get("/posts/")
         self.assertEqual(go_to_index.status_code, 200)
-        post_response = self.client.post('/posts/create/', data={
-                                                            "post_body":"Example",
-                                                            "post_title":"You cannot see me" ,
-                                                            "author": f"{user.id}" }
-                                        )
+        data = {  "post_body":"Hello Darkness", "post_title":"You cannot see me" , "author": f"{user.id}",
+        "pub_date_month": '1', "pub_date_day": '1', 'pub_date_year':'2021' }
+        post_response = self.client.post('/posts/create/', data , follow=True )
         # new_post = Post.objects.get(post_title="You cannot see me")
         # print("New Post", new_post)
-        self.assertEqual(post_response.status_code, 200)
-        go_to_index = self.client.get("/posts/")
-        print("Index file", go_to_index)
-        self.assertContains(go_to_index, "You cannot see me")
+        # self.assertEqual(post_response.status_code, 200)
+        self.assertRedirects(post_response, '/posts/', status_code=302, target_status_code=200, fetch_redirect_response=True)
+        self.assertContains(post_response, "Hello Darkness" )
+        # go_to_index = self.client.get("/posts/")
+
+
+        # self.assertEqual(message.tags, "success")
+        # self.assertTrue("success text" in message.message)
 
 class PostsDetailView(TestCase):
     def setUp(self):
