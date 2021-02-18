@@ -66,6 +66,8 @@ def create_post(request):
             messages.success(request, 'Form submission successful')
             # redirect to a new URL:
             return redirect('posts:index')
+        else:
+            print("Form Invalid", request.POST)
 
     # if a GET (or any other method) we'll create a blank form
     else:
