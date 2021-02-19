@@ -52,6 +52,7 @@ class SignUpView(TestCase):
 class LoginView(TestCase):
     def setUp(self):
             self.client = Client()
+            create_user()
 
     def test_successful_login(self):
         response = self.client.get("/profiles/login/")
@@ -59,7 +60,7 @@ class LoginView(TestCase):
         login_response = self.client.post("/profiles/login/",  {"username": "john", "password" :"johnpassword"}, follow=True, secure=True)
         self.assertEqual(login_response.status_code, 200)
 
-    @unittest.skip("skip the test")
+    # @unittest.skip("skip the test")
     def test_success_login_redirects_to_posts_index(self):
         login_response = self.client.post(
                                     "/profiles/login/", data={"username": "john", "password" :"johnpassword"}, follow=True, secure=True
@@ -73,8 +74,8 @@ class LoginView(TestCase):
         login_response = self.client.post(
                             "/profiles/login/", data={"username": "john", "password" :"fdsafdsafdsd"}, follow=True
                         )
-        self.assertRedirects(login_response, '/profiles/login/')
-        self.assertContains(login_response, "Username or password is incorrect.")
+        self.assertRedirects(login_response, '/profiles/login/',status_code=302, fetch_redirect_response=True)
+        self.assertContains(login_response, "Username or password not correct.")
 
 
 class LogoutView(TestCase):
