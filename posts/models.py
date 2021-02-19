@@ -6,12 +6,14 @@ import datetime
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 
 class Post(models.Model):
     post_body = models.CharField(max_length=200)
     post_title = models.CharField(max_length=120)
     pub_date = models.DateTimeField('date published', default=timezone.now())
-    like_count = models.IntegerField(default=0)
+    # like_count = models.IntegerField(default=0)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -29,3 +31,13 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.comment_body
+
+class Reaction(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    reaction = models.CharField(max_length=10, default="U+1F44D")
+    content_object = GenericForeignKey('content_type', 'object_id')
+    object_id = models.PositiveIntegerField()
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.reaction

@@ -47,10 +47,23 @@ class DetailView(LoginRequiredMixin,generic.DetailView):
             return Post.objects.filter(pub_date__lte=timezone.now())
 
 @login_required
+def add_reaction(request):
+    user = get_object_or_404(User, pk=request.user.id)
+    if request.method == 'POST':
+        # Search the post or comment
+        # Check if the user has contributed to the comment
+        # If the user has contributed then remove it
+        # If the user hasn't, add a reaction
+        # Save form
+        pass
+    else:
+        pass
+
+
+@login_required
 def create_post(request):
     # if this is a POST request we need to process the form data
     user = get_object_or_404(User, pk=request.user.id)
-    print(request.POST)
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
 
