@@ -7,4 +7,16 @@
 <h5>By: {{ post.author.username }}</h5>
 <div>Date Published: {{post.pub_date}}</div>
 <p>{{post.post_body}}</p>
+
+<h5>Comments:</h5>
+{% for comment in post.comment_set.all %}
+<div>
+    <p>{{comment.comment_body}}</p>
+    <h6>{{comment.author}}</h6>
+</div>
+{% endfor %}
+
+<form method="POST" action="{% url 'posts:create-comment' post.id %}" >
+
+</form>
 {% endblock %}

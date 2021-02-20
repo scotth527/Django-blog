@@ -12,7 +12,7 @@ from django.contrib.contenttypes.models import ContentType
 class Post(models.Model):
     post_body = models.CharField(max_length=200)
     post_title = models.CharField(max_length=120)
-    pub_date = models.DateTimeField('date published', default=timezone.now())
+    pub_date = models.DateTimeField('date published', null=True, blank=True)
     # like_count = models.IntegerField(default=0)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
@@ -27,7 +27,7 @@ class Comment(models.Model):
     comment_body = models.CharField(max_length=200)
     like_count = models.IntegerField(default=0)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    author_name = models.CharField(max_length=200)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, null = True)
 
     def __str__(self):
         return self.comment_body

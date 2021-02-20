@@ -11,7 +11,7 @@ class Profile(models.Model):
     address = models.CharField(max_length=50)
     city = models.CharField(max_length=50, default="Miami")
     state = models.CharField(max_length=50, default="FL")
-    birthday = models.DateField(auto_now=False, auto_now_add=False, default=timezone.now())
+    birthday = models.DateField(auto_now=False, auto_now_add=False, null=True, blank=True)
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,

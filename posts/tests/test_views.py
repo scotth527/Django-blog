@@ -64,7 +64,16 @@ class PostsDetailView(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
 
-    def test_that_like_button_works(self):
+    # @unittest.skip("skip the test")
+    def test_a_reaction_is_added_if_not_yet_reacted(self):
+        login(self.client)
+        post = create_post(body_sample, title, self.user, -4)
+        url = reverse('posts:index')
+        go_to_index = self.client.get(url)
+        print("Post that was created", go_to_index.content)
+        self.assertContains(go_to_index, title)
+
+    def test_that_if_post_has_a_reaction_by_the_user_that_it_it_will_be_removed(self):
         pass
 
     def test_that_if_user_is_not_logged_in_gets_redirected(self):

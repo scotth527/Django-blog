@@ -15,6 +15,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='post',
             name='pub_date',
-            field=models.DateTimeField(default=datetime.datetime(2021, 2, 8, 0, 22, 55, 90977, tzinfo=utc), verbose_name='date published'),
+            field=models.DateTimeField( verbose_name='date published'),
         ),
     ]

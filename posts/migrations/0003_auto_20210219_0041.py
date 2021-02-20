@@ -23,7 +23,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='post',
             name='pub_date',
-            field=models.DateTimeField(default=datetime.datetime(2021, 2, 19, 0, 41, 8, 645151, tzinfo=utc), verbose_name='date published'),
+            field=models.DateTimeField( verbose_name='date published',),
         ),
         migrations.CreateModel(
             name='Reaction',
