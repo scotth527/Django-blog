@@ -1,5 +1,5 @@
 from django import forms
-from .models import Post, Reaction
+from .models import Post, Reaction, Comment
 
 class PostsForm(forms.ModelForm):
     post_title = forms.CharField(label='Title', max_length=100, required=True)
@@ -9,6 +9,13 @@ class PostsForm(forms.ModelForm):
     class Meta:
             model = Post
             fields = ('post_title', 'post_body',  'pub_date' )
+
+class CommentsForm(forms.ModelForm):
+    comment_body = forms.CharField(label='Comment', max_length=120, required=True)
+
+    class Meta:
+                model = Comment
+                fields = ('comment_body', )
 
 class ReactionsForm(forms.ModelForm):
     pass

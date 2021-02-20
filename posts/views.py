@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import ModelFormMixin
-from posts.forms import PostsForm
+from posts.forms import PostsForm, CommentsForm, ReactionsForm
 from django.contrib import messages
 
 
@@ -26,6 +26,7 @@ class IndexView(LoginRequiredMixin, generic.ListView ):
         context = super(IndexView, self).get_context_data(**kwargs)
         # Create any data and add it to the context
         context['form'] = PostsForm
+        context['comment_form'] = CommentsForm
 
         return context
 
@@ -37,6 +38,7 @@ class IndexView(LoginRequiredMixin, generic.ListView ):
 class DetailView(LoginRequiredMixin,generic.DetailView):
     model = Post
     template_name = 'posts/detail.html'
+    form_class = CommentsForm
     # login_url = '/profiles/login'
     # redirect_field_name = 'redirect_to'
 
