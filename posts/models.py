@@ -28,6 +28,7 @@ class Comment(models.Model):
     like_count = models.IntegerField(default=0)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     author = models.ForeignKey(User, on_delete=models.CASCADE, null = True)
+    created_date = models.DateTimeField('date created', null=True, auto_now_add=True,blank=True )
 
     def __str__(self):
         return self.comment_body
