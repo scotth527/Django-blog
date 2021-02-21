@@ -39,8 +39,15 @@ class DetailView(LoginRequiredMixin,generic.DetailView):
     model = Post
     template_name = 'posts/detail.html'
     form_class = CommentsForm
-    # login_url = '/profiles/login'
-    # redirect_field_name = 'redirect_to'
+
+    def get_context_data(self, **kwargs):
+            # Call the base implementation first to get the context
+            context = super(DetailView, self).get_context_data(**kwargs)
+            # Create any data and add it to the context
+            context['form'] = self.form_class
+
+
+            return context
 
     def get_queryset(self):
             """
@@ -89,3 +96,33 @@ def create_post(request):
         form = PostsForm()
 
     return render(request, 'posts/index.html', {'form': form})
+
+@login_required
+def create_comment(request, post_id):
+    user = get_object_or_404(User, pk=request.user.id)
+    post = get_object_or_404(Post, pk=post_id)
+    if request.method == 'POST':
+            # create a form instance and populate it with data from the request:
+
+            form = CommentsForm(request.POST)
+            # check whether it's valid:
+
+            if form.is_valid():
+                # process the data in form.cleaned_data as required
+                # ...
+                comment = form.save(commit=False)
+                comment.author = request.user
+                comment.post = post
+                comment.save()
+                print("Successfully saved.")
+                messages.success(request, 'Comment submission successful')
+                # redirect to a new URL:
+                return redirect(reverse('posts:detail', args=(post.id,)))
+            else:
+                print("Form Invalid", request.POST)
+
+    else:
+        form = PostsForm()
+
+        return render(request, 'posts/index.html', {'form': form})
+    pass

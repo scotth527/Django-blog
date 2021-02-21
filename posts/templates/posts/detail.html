@@ -16,7 +16,6 @@
 </div>
 {% endfor %}
 
-<form method="POST" action="{% url 'posts:create-comment' post.id %}" >
+{% include 'posts/partials/_comments_new.html' with id=post.id %}
 
-</form>
 {% endblock %}
