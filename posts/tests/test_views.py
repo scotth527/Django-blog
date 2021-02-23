@@ -70,8 +70,11 @@ class PostsDetailView(TestCase):
         post = create_post(body_sample, title, self.user, -4)
         url = reverse('posts:index')
         go_to_index = self.client.get(url)
-        print("Post that was created", go_to_index.content)
         self.assertContains(go_to_index, title)
+        reaction_url = f'/posts/{post.id}/reaction'
+        add_reaction = self.client.post(reaction_url, {
+
+        })
 
     def test_that_if_post_has_a_reaction_by_the_user_that_it_it_will_be_removed(self):
         pass

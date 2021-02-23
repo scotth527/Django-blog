@@ -8,4 +8,5 @@ urlpatterns = [
     path('<int:pk>/', views.DetailView.as_view(), name='detail'),
     path('create/',views.create_post, name='create-post'),
     path('<int:post_id>/comment/',views.create_comment, name='create-comment'),
+    path('<int:object_id>/<str:object>/reaction/')
 ]
