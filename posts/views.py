@@ -56,9 +56,21 @@ class DetailView(LoginRequiredMixin,generic.DetailView):
             return Post.objects.filter(pub_date__lte=timezone.now())
 
 @login_required
-def add_reaction(request):
+def add_reaction(request, object_id, object_type):
     user = get_object_or_404(User, pk=request.user.id)
+    object = None
+    if object == "comment":
+        object = get_object_or_404(Comment, pk=object_id)
+    elif object == "post":
+        object = get_object_or_404(Post, pk=object_id)
+
+    object.reaction_set # Check if user already liked post/comment
     if request.method == 'POST':
+        form = ReactionsForm(request.POST)
+        reaction = form.save(commit=False)
+        reaction.user = user
+        reaction.object_id = object_id
+        reaction.content_type
         # Search the post or comment
         # Check if the user has contributed to the comment
         # If the user has contributed then remove it
