@@ -18,4 +18,8 @@ class CommentsForm(forms.ModelForm):
                 fields = ('comment_body', )
 
 class ReactionsForm(forms.ModelForm):
-    pass
+    # reaction = forms.CharField(label='Reaction', max_length=100)
+
+    class Meta:
+                model = Reaction
+                fields = ('reaction',)
