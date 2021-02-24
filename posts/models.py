@@ -6,8 +6,18 @@ import datetime
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
-from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
+
+class Reaction(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    reaction = models.CharField(max_length=10, default="U+1F44D")
+    content_object = GenericForeignKey('content_type', 'object_id')
+    object_id = models.PositiveIntegerField()
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.reaction
 
 class Post(models.Model):
     post_body = models.CharField(max_length=200)
@@ -15,6 +25,7 @@ class Post(models.Model):
     pub_date = models.DateTimeField('date published', null=True, blank=True)
     # like_count = models.IntegerField(default=0)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
+    reactions = GenericRelation(Reaction)
 
     def __str__(self):
         return self.post_title
@@ -29,16 +40,8 @@ class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     author = models.ForeignKey(User, on_delete=models.CASCADE, null = True)
     created_date = models.DateTimeField('date created', null=True, auto_now_add=True,blank=True )
+    reactions = GenericRelation(Reaction)
 
     def __str__(self):
         return self.comment_body
 
-class Reaction(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    reaction = models.CharField(max_length=10, default="U+1F44D")
-    content_object = GenericForeignKey('content_type', 'object_id')
-    object_id = models.PositiveIntegerField()
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.reaction

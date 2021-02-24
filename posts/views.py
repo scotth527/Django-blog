@@ -13,7 +13,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import ModelFormMixin
 from posts.forms import PostsForm, CommentsForm, ReactionsForm
 from django.contrib import messages
-
+from utils.dictionary_utils import check_existing_dictionary_in_list
+import pdb
 
 
 class IndexView(LoginRequiredMixin, generic.ListView ):
@@ -56,27 +57,37 @@ class DetailView(LoginRequiredMixin,generic.DetailView):
             return Post.objects.filter(pub_date__lte=timezone.now())
 
 @login_required
-def add_reaction(request, object_id, object_type):
+def toggle_reaction(request, object_id, object_type):
     user = get_object_or_404(User, pk=request.user.id)
     object = None
-    if object == "comment":
+    if object_type == "comment":
         object = get_object_or_404(Comment, pk=object_id)
-    elif object == "post":
+    elif object_type == "post":
         object = get_object_or_404(Post, pk=object_id)
 
-    object.reaction_set # Check if user already liked post/comment
-    if request.method == 'POST':
+    print("Object reaction set", object.reactions.all()) # Check if user already liked post/comment
+    # found_user = [profile for profile in object.reaction_set if profile["username"] == request.user.username]
+    # object.__dict__
+
+    if request.method == 'POST' and object != None:
         form = ReactionsForm(request.POST)
-        reaction = form.save(commit=False)
-        reaction.user = user
-        reaction.object_id = object_id
-        reaction.content_type
-        # Search the post or comment
-        # Check if the user has contributed to the comment
-        # If the user has contributed then remove it
-        # If the user hasn't, add a reaction
-        # Save form
-        pass
+        # pdb.set_trace()
+        if form.is_valid():
+
+            reaction = form.save(commit=False)
+            reaction.user = user
+            reaction.object_id = object_id
+            reaction.content_object = object
+            print("Reaction", reaction)
+            reaction.save()
+            # Search the post or comment
+            # Check if the user has contributed to the comment
+            # If the user has contributed then remove it
+            # If the user hasn't, add a reaction
+            # Save form
+            return redirect('posts:index')
+        else:
+            print("Form Invalid", form.errors)
     else:
         pass
 
