@@ -65,6 +65,10 @@ def toggle_reaction(request, object_id, object_type):
     elif object_type == "post":
         object = get_object_or_404(Post, pk=object_id)
 
+    object_reaction_list = object.reactions.filter(user=user)
+    print("OBject list with user", object_reaction_list, len(object_reaction_list))
+    # print(object_reaction_list[0].user)
+    # if_user_liked_object = check_existing_dictionary_in_list(object_reaction_list, "user", user.username)
     print("Object reaction set", object.reactions.all()) # Check if user already liked post/comment
     # found_user = [profile for profile in object.reaction_set if profile["username"] == request.user.username]
     # object.__dict__
