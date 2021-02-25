@@ -65,35 +65,25 @@ def toggle_reaction(request, object_id, object_type):
     elif object_type == "post":
         object = get_object_or_404(Post, pk=object_id)
 
-    object_reaction_list = object.reactions.filter(user=user)
-    print("OBject list with user", object_reaction_list, len(object_reaction_list))
-    # print(object_reaction_list[0].user)
-    # if_user_liked_object = check_existing_dictionary_in_list(object_reaction_list, "user", user.username)
-    print("Object reaction set", object.reactions.all()) # Check if user already liked post/comment
-    # found_user = [profile for profile in object.reaction_set if profile["username"] == request.user.username]
-    # object.__dict__
+    user_reaction = object.reactions.filter(user=user)
+    user_has_reacted_to_object = user_reaction.count() > 0
 
-    if request.method == 'POST' and object != None:
+    if request.method == 'POST' and object:
         form = ReactionsForm(request.POST)
         # pdb.set_trace()
-        if form.is_valid():
-
+        if form.is_valid() and not user_has_reacted_to_object:
             reaction = form.save(commit=False)
             reaction.user = user
             reaction.object_id = object_id
             reaction.content_object = object
-            print("Reaction", reaction)
             reaction.save()
-            # Search the post or comment
-            # Check if the user has contributed to the comment
-            # If the user has contributed then remove it
-            # If the user hasn't, add a reaction
-            # Save form
-            return redirect('posts:index')
+
         else:
-            print("Form Invalid", form.errors)
+            user_reaction.delete()
+
+        return redirect(request.META.get('HTTP_REFERER', 'posts:index'))
     else:
-        pass
+        print("Object was NONE")
 
 
 @login_required

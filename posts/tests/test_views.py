@@ -1,5 +1,5 @@
 from django.test import TestCase, Client, RequestFactory
-from posts.models import Post
+from posts.models import Post, Reaction
 from profiles.models import Profile
 from django.utils import timezone
 from django.shortcuts import render, get_object_or_404
@@ -8,6 +8,8 @@ from posts.tests.helpers.utils import create_post
 from django.urls import reverse
 from django.contrib.auth.models import User
 import datetime
+import unittest
+import pdb
 
 body_sample = "Cool thanks for reading"
 title="My first post"
@@ -30,7 +32,6 @@ class PostCreateView(TestCase):
     def test_successful_creation_of_new_post_from_index(self):
         login(self.client)
         go_to_index = self.client.get(self.index_route)
-        self.assertEqual(go_to_index.status_code, 200)
         post_response = self.client.post(self.create_post_route, self.post_data , follow=True )
         self.assertRedirects(post_response, '/posts/', status_code=302, target_status_code=200, fetch_redirect_response=True)
         self.assertContains(post_response, "Hello Darkness" )
@@ -49,6 +50,7 @@ class PostsDetailView(TestCase):
         user = create_user()
         self.client = Client()
         self.user = User.objects.get(email="youcantseeme@wwe.com")
+        self.index_url = reverse('posts:index')
 
     def test_detail_view_shows_body(self):
         post = create_post(body_sample, title, self.user)
@@ -68,18 +70,26 @@ class PostsDetailView(TestCase):
     def test_a_reaction_is_added_if_not_yet_reacted(self):
         login(self.client)
         post = create_post(body_sample, title, self.user, -4)
-        url = reverse('posts:index')
-        go_to_index = self.client.get(url)
+        go_to_index = self.client.get(self.index_url)
         self.assertContains(go_to_index, title)
-        reaction_url = f'/posts/{post.id}/reaction'
-        add_reaction = self.client.post(reaction_url, {
+        reaction_url = f'/posts/{post.id}/post/reaction/'
+        add_reaction = self.client.post(reaction_url, {"reaction":"U+1F44D"})
+        # pdb.set_trace()
+        self.assertRedirects(add_reaction, self.index_url)
+        self.assertEqual(post.reactions.filter(user=self.user).count(), 1)
 
-        })
+    def test_that_if_post_has_a_reaction_by_the_user_already_that_it_will_be_removed(self):
+        login(self.client)
+        post = create_post(body_sample, title, self.user, -4)
+        go_to_index = self.client.get(self.index_url)
+        self.assertContains(go_to_index, title)
+        reaction1 = Reaction.objects.create(user=self.user, reaction="U+1F44D", object_id=post.id, content_object=post)
+        # pdb.set_trace()
+        reaction_url = f'/posts/{post.id}/post/reaction/'
+        remove_reaction = self.client.post(reaction_url, {"reaction":"U+1F44D"})
+        self.assertEqual(post.reactions.filter(user=self.user).count(), 0)
 
-    def test_that_if_post_has_a_reaction_by_the_user_that_it_it_will_be_removed(self):
-        pass
-
-    def test_that_if_user_is_not_logged_in_gets_redirected(self):
+    def test_that_if_user_is_not_logged_in_and_tries_detail_gets_redirected(self):
         post = create_post(body_sample, title, self.user, 4)
         url = reverse('posts:detail', args=(post.id,))
         response = self.client.get(url)
