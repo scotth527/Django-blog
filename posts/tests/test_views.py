@@ -83,11 +83,14 @@ class PostsDetailView(TestCase):
         post = create_post(body_sample, title, self.user, -4)
         go_to_index = self.client.get(self.index_url)
         self.assertContains(go_to_index, title)
+        User.objects.create_user('Dwayne', 'dj@wwe.com', 'peoplepassword')
+        second_user = User.objects.get(email='dj@wwe.com')
         reaction1 = Reaction.objects.create(user=self.user, reaction="U+1F44D", object_id=post.id, content_object=post)
-        # pdb.set_trace()
+        reaction2 = Reaction.objects.create(user=second_user ,reaction="U+1F44D", object_id=post.id, content_object=post)
         reaction_url = f'/posts/{post.id}/post/reaction/'
         remove_reaction = self.client.post(reaction_url, {"reaction":"U+1F44D"})
         self.assertEqual(post.reactions.filter(user=self.user).count(), 0)
+        self.assertEqual(post.reactions.all().count(), 1)
 
     def test_that_if_user_is_not_logged_in_and_tries_detail_gets_redirected(self):
         post = create_post(body_sample, title, self.user, 4)
@@ -100,6 +103,7 @@ class PostsIndexView(TestCase):
             create_user()
             self.client = Client()
             self.user = User.objects.get(email="youcantseeme@wwe.com")
+
 
     def test_only_friends_and_your_own_posts_show_up_on_feed(self):
         pass

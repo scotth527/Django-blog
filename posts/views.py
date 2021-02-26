@@ -46,8 +46,6 @@ class DetailView(LoginRequiredMixin,generic.DetailView):
             context = super(DetailView, self).get_context_data(**kwargs)
             # Create any data and add it to the context
             context['form'] = self.form_class
-
-
             return context
 
     def get_queryset(self):
