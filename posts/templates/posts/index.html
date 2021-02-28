@@ -15,7 +15,7 @@
     <p>By: <a href="{% url 'profiles:detail' post.author.id %}">{{post.author.username}}</a></p>
     <p>{{post.post_body}}</p>
 
-    {% include 'posts/partials/_toggle_reaction.html' with id=post.id is_liked=True type="post" reaction_count=post.reactions.count %}
+    {% include 'posts/partials/_toggle_reaction.html' with id=post.id is_liked=True type="post" object=post reaction_count=post.reactions.count %}
 
     {% include 'posts/partials/_comments_new.html' with id=post.id form=comment_form %}
 
