@@ -27,5 +27,8 @@ class Profile(models.Model):
     def __str__(self):
             return self.first_name + " " + self.last_name
 
-# class Friendship(models.Model):
-    # pass
+class Friendship(models.Model):
+    status = models.CharField(max_length=50)
+    requester = models.ForeignKey(User, on_delete=models.CASCADE)
+    requestee = models.ForeignKey(User, on_delete=models.CASCADE)
+
