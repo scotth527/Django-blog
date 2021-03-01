@@ -34,7 +34,12 @@ class IndexView(LoginRequiredMixin, generic.ListView ):
     def get_queryset(self):
         """Return the last five posts."""
         # pub_date__lte means less than or equal to, today
-        return Post.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')[:5]
+        current_posts = Post.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')[:5]
+        # current_posts.annotate(is_liked_by_user=check_existing_dictionary_in_list('reactions', "user", self.request.user))
+        for post in current_posts:
+            post.is_liked_by_user = check_existing_dictionary_in_list(post.reactions.all(), "user", self.request.user)
+
+        return current_posts
 
 class DetailView(LoginRequiredMixin,generic.DetailView):
     model = Post
@@ -46,13 +51,39 @@ class DetailView(LoginRequiredMixin,generic.DetailView):
             context = super(DetailView, self).get_context_data(**kwargs)
             # Create any data and add it to the context
             context['form'] = self.form_class
+            post = context['post']
+            comments = post.comment_set.all()
+            for i, comment in enumerate(comments):
+
+              comment.is_liked_by_user = check_existing_dictionary_in_list(comment.reactions.all(), "user", self.request.user)
+              print("Was comment liked by user?", comment.is_liked_by_user, comment.comment_body)
+                # comment.is_liked_by_user = check_existing_dictionary_in_list(comment.reactions.all(), "user", self.request.user)
+                # context['is_liked_by_user'] = check_existing_dictionary_in_list(post.reactions.all(), "user", self.request.user)
+            pdb.set_trace()
             return context
 
     def get_queryset(self):
             """
             Excludes any questions that aren't published yet.
             """
-            return Post.objects.filter(pub_date__lte=timezone.now())
+            post = Post.objects.filter(pub_date__lte=timezone.now())
+            for item in post:
+                item.is_liked_by_user = check_existing_dictionary_in_list(item.reactions.all(), "user", self.request.user)
+
+            print("Post INformation", post[0] , post[0].is_liked_by_user)
+            try:
+
+                for comment in post[0].comment_set.all():
+                    print("COMMENT INFO", comment, comment.id)
+                    comment.is_liked_by_user = check_existing_dictionary_in_list(comment.reactions.all(), "user", self.request.user)
+                    print("Comment is liked status", comment.is_liked_by_user)
+                # for comment in post[0].comment_set.all():
+                   #  print("Comment is liked", comment, comment.is_liked_by_user)
+            except Exception as e:
+                 print("", e)
+
+            # pdb.set_trace()
+            return post
 
 @login_required
 def toggle_reaction(request, object_id, object_type):

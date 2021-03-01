@@ -8,14 +8,16 @@
 <div>Date Published: {{post.pub_date}}</div>
 <p>{{post.post_body}}</p>
 
-{% include 'posts/partials/_toggle_reaction.html' with id=post.id is_liked=True type="post" reaction_count=post.reactions.count %}
+{% include 'posts/partials/_toggle_reaction.html' with id=post.id is_liked=is_liked_by_user type="post" reaction_count=post.reactions.count %}
 
 <h5>Comments:</h5>
 {% for comment in post.comment_set.all %}
+
 <div>
     <p>{{comment.comment_body}}</p>
     <h6>{{comment.author}}</h6>
-    {% include 'posts/partials/_toggle_reaction.html' with id=comment.id is_liked=True type="comment" object=comment reaction_count=comment.reactions.count %}
+
+    {% include 'posts/partials/_toggle_reaction.html' with id=comment.id is_liked=comment.is_liked_by_user type="comment" reaction_count=comment.reactions.count %}
 
 </div>
 {% endfor %}
