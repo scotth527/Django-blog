@@ -3,7 +3,7 @@
     <div>Like Count: {{reaction_count | default_if_none:"0" }} </div>
     <input type="hidden" name="reaction" value="U+1F44D" />
     <button type="submit">
-        {% if user in object.reactions %}
+        {% if is_liked %}
         Unlike
         {% else %}
         Like
