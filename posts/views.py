@@ -4,7 +4,7 @@ from django.template import loader
 from django.urls import reverse
 from django.utils import timezone
 from django.views import generic
-from .models import Post, Comment
+from .models import Post, Comment, Reaction
 from django.contrib.auth.models import User
 # from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import login_required
@@ -15,7 +15,8 @@ from posts.forms import PostsForm, CommentsForm, ReactionsForm
 from django.contrib import messages
 from utils.dictionary_utils import check_existing_dictionary_in_list
 import pdb
-
+from django.db.models.expressions import Case, When, Value, Exists
+from django.db.models import Count
 
 class IndexView(LoginRequiredMixin, generic.ListView ):
     template_name = 'posts/index.html'
@@ -53,13 +54,16 @@ class DetailView(LoginRequiredMixin,generic.DetailView):
             context['form'] = self.form_class
             post = context['post']
             comments = post.comment_set.all()
-            for i, comment in enumerate(comments):
+            post.is_liked_by_user = check_existing_dictionary_in_list(post.reactions.all(), "user", self.request.user)
 
-              comment.is_liked_by_user = check_existing_dictionary_in_list(comment.reactions.all(), "user", self.request.user)
-              print("Was comment liked by user?", comment.is_liked_by_user, comment.comment_body)
+            comments.annotate(is_liked_by_user=Count('reactions'))
+            # for i, comment in enumerate(comments):
+               # print("Comment is liked", comment.is_liked_by_user)
+                # comment.is_liked_by_user = check_existing_dictionary_in_list(comment.reactions.all(), "user", self.request.user)
+              # print("Was comment liked by user?", comment.is_liked_by_user, comment.comment_body)
                 # comment.is_liked_by_user = check_existing_dictionary_in_list(comment.reactions.all(), "user", self.request.user)
                 # context['is_liked_by_user'] = check_existing_dictionary_in_list(post.reactions.all(), "user", self.request.user)
-            pdb.set_trace()
+            # pdb.set_trace()
             return context
 
     def get_queryset(self):
@@ -67,16 +71,23 @@ class DetailView(LoginRequiredMixin,generic.DetailView):
             Excludes any questions that aren't published yet.
             """
             post = Post.objects.filter(pub_date__lte=timezone.now())
-            for item in post:
-                item.is_liked_by_user = check_existing_dictionary_in_list(item.reactions.all(), "user", self.request.user)
+            user_reaction = Reaction.objects.filter(
+                user=self.request.user,
 
-            print("Post INformation", post[0] , post[0].is_liked_by_user)
+            )
+            print("POST VALUES", post.values('comment').annotate(is_liked_by_user=Exists(user_reaction)))
+
+            # for item in post:
+                # item.annotate(is_liked_by_user = False )
+                # item.is_liked_by_user = check_existing_dictionary_in_list(item.reactions.all(), "user", self.request.user)
+
+
             try:
 
                 for comment in post[0].comment_set.all():
-                    print("COMMENT INFO", comment, comment.id)
+                    # print("COMMENT INFO", comment, comment.id)
                     comment.is_liked_by_user = check_existing_dictionary_in_list(comment.reactions.all(), "user", self.request.user)
-                    print("Comment is liked status", comment.is_liked_by_user)
+                    # print("Comment is liked status", comment.is_liked_by_user)
                 # for comment in post[0].comment_set.all():
                    #  print("Comment is liked", comment, comment.is_liked_by_user)
             except Exception as e:
