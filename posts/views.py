@@ -16,7 +16,7 @@ from django.contrib import messages
 from utils.dictionary_utils import check_existing_dictionary_in_list
 import pdb
 from django.db.models.expressions import Case, When, Value, Exists
-from django.db.models import Count
+from django.db.models import Count, Q
 
 class IndexView(LoginRequiredMixin, generic.ListView ):
     template_name = 'posts/index.html'
@@ -55,11 +55,14 @@ class DetailView(LoginRequiredMixin,generic.DetailView):
             post = context['post']
             comments = post.comment_set.all()
             post.is_liked_by_user = check_existing_dictionary_in_list(post.reactions.all(), "user", self.request.user)
+            # comments.annotate(is_liked_by_user=Count('reactions', filter=Q(reactions__user=self.request.user)))
+            comments.annotate(is_liked_by_user=Count('reactions'), filter=Q(reactions__user=self.request.user))
 
-            comments.annotate(is_liked_by_user=Count('reactions'))
+            # print("Commments", comments, comments[0].is_liked_by_user)
+            # comments.annotate(is_liked_by_user=Count('reactions'))
             # for i, comment in enumerate(comments):
                # print("Comment is liked", comment.is_liked_by_user)
-                # comment.is_liked_by_user = check_existing_dictionary_in_list(comment.reactions.all(), "user", self.request.user)
+                 # comment.is_liked_by_user = check_existing_dictionary_in_list(comment.reactions.all(), "user", self.request.user)
               # print("Was comment liked by user?", comment.is_liked_by_user, comment.comment_body)
                 # comment.is_liked_by_user = check_existing_dictionary_in_list(comment.reactions.all(), "user", self.request.user)
                 # context['is_liked_by_user'] = check_existing_dictionary_in_list(post.reactions.all(), "user", self.request.user)
@@ -75,7 +78,9 @@ class DetailView(LoginRequiredMixin,generic.DetailView):
                 user=self.request.user,
 
             )
-            print("POST VALUES", post.values('comment').annotate(is_liked_by_user=Exists(user_reaction)))
+            # comments = post.comment_set.all()
+            # comments.annotate(is_liked_by_user= Count('reactions', filter=Q(reactions__user=self.request.user)) )
+            # print("POST VALUES", post.values('comment').annotate(is_liked_by_user=Exists(user_reaction)))
 
             # for item in post:
                 # item.annotate(is_liked_by_user = False )
@@ -83,10 +88,10 @@ class DetailView(LoginRequiredMixin,generic.DetailView):
 
 
             try:
-
-                for comment in post[0].comment_set.all():
+                pass
+                # for comment in post[0].comment_set.all():
                     # print("COMMENT INFO", comment, comment.id)
-                    comment.is_liked_by_user = check_existing_dictionary_in_list(comment.reactions.all(), "user", self.request.user)
+                    # comment.is_liked_by_user = check_existing_dictionary_in_list(comment.reactions.all(), "user", self.request.user)
                     # print("Comment is liked status", comment.is_liked_by_user)
                 # for comment in post[0].comment_set.all():
                    #  print("Comment is liked", comment, comment.is_liked_by_user)
