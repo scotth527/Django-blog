@@ -10,7 +10,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic.edit import ModelFormMixin
+from django.views.generic.edit import ModelFormMixin, DeleteView
 from posts.forms import PostsForm, CommentsForm, ReactionsForm
 from django.contrib import messages
 from utils.dictionary_utils import check_existing_dictionary_in_list
@@ -100,6 +100,15 @@ class DetailView(LoginRequiredMixin,generic.DetailView):
 
             # pdb.set_trace()
             return post
+
+class PostsDeleteView(LoginRequiredMixin, generic.DeleteView):
+    # specify the model you want to use
+    model = Post
+
+    # can specify success url
+    # url to redirect after sucessfully
+    # deleting object
+    success_url = "/"
 
 @login_required
 def toggle_reaction(request, object_id, object_type):
