@@ -24,4 +24,10 @@
 
 {% include 'posts/partials/_comments_new.html' with id=post.id %}
 
+{% if post.author == user %}
+
+<a href="{% url 'posts:delete-post' post.id %}">Delete</a>
+
+{% endif %}
+
 {% endblock %}
