@@ -27,6 +27,7 @@
 {% if post.author == user %}
 
 <a href="{% url 'posts:delete-post' post.id %}">Delete</a>
+<a href="{% url 'posts:update-post' post.id %}">Edit</a>
 
 {% endif %}
 

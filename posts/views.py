@@ -11,12 +11,13 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import ModelFormMixin, DeleteView, UpdateView
-from posts.forms import PostsForm, CommentsForm, ReactionsForm
+from posts.forms import PostsForm, CommentsForm, ReactionsForm, PostUpdateForm
 from django.contrib import messages
 from utils.dictionary_utils import check_existing_dictionary_in_list
 import pdb
 from django.db.models.expressions import Case, When, Value, Exists
 from django.db.models import Count, Q
+from .decorators import user_is_entry_author
 
 class IndexView(LoginRequiredMixin, generic.ListView ):
     template_name = 'posts/index.html'
@@ -101,6 +102,7 @@ class DetailView(LoginRequiredMixin,generic.DetailView):
             # pdb.set_trace()
             return post
 
+
 class PostsDeleteView(LoginRequiredMixin, generic.DeleteView):
     # specify the model you want to use
     model = Post
@@ -112,10 +114,15 @@ class PostsDeleteView(LoginRequiredMixin, generic.DeleteView):
 
 class PostUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Post
-    fields = ['name']
+    form_class = PostUpdateForm
     template_name_suffix = '_update_form'
 
+    def get_success_url(self):
+        pk = self.kwargs["pk"]
+        return reverse("posts:detail", kwargs={"pk": pk})
+
 @login_required
+@user_is_entry_author
 def toggle_reaction(request, object_id, object_type):
     user = get_object_or_404(User, pk=request.user.id)
     object = None
