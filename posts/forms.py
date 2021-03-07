@@ -23,3 +23,11 @@ class ReactionsForm(forms.ModelForm):
     class Meta:
                 model = Reaction
                 fields = ('reaction',)
+
+class PostUpdateForm(forms.ModelForm):
+    post_title = forms.CharField(label='Title', max_length=100, required=True)
+    post_body = forms.CharField(label='Body', widget=forms.Textarea, required=True)
+
+    class Meta:
+                model = Post
+                fields = ('post_title', 'post_body')

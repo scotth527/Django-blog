@@ -10,4 +10,5 @@ urlpatterns = [
     path('<int:post_id>/comment/',views.create_comment, name='create-comment'),
     path('<int:object_id>/<str:object_type>/reaction/', views.toggle_reaction, name='toggle-reaction'),
     path('<int:pk>/delete/', views.PostsDeleteView.as_view(), name='delete-post'),
+    path('<int:pk>/update/', views.PostUpdateView.as_view(), name='update-post'),
 ]
