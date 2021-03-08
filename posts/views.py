@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 # from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic.edit import ModelFormMixin, DeleteView, UpdateView
 from posts.forms import PostsForm, CommentsForm, ReactionsForm, PostUpdateForm
 from django.contrib import messages
@@ -17,7 +17,7 @@ from utils.dictionary_utils import check_existing_dictionary_in_list
 import pdb
 from django.db.models.expressions import Case, When, Value, Exists
 from django.db.models import Count, Q
-from .decorators import user_is_entry_author
+from .decorators import user_is_author
 
 class IndexView(LoginRequiredMixin, generic.ListView ):
     template_name = 'posts/index.html'
@@ -44,6 +44,7 @@ class IndexView(LoginRequiredMixin, generic.ListView ):
         return current_posts
 
 class DetailView(LoginRequiredMixin,generic.DetailView):
+    """"Returns the specified post, cannot show a post that has not been published yet."""
     model = Post
     template_name = 'posts/detail.html'
     form_class = CommentsForm
@@ -103,7 +104,7 @@ class DetailView(LoginRequiredMixin,generic.DetailView):
             return post
 
 
-class PostsDeleteView(LoginRequiredMixin, generic.DeleteView):
+class PostsDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView):
     # specify the model you want to use
     model = Post
 
@@ -112,7 +113,11 @@ class PostsDeleteView(LoginRequiredMixin, generic.DeleteView):
     # deleting object
     success_url = "/"
 
-class PostUpdateView(LoginRequiredMixin, generic.UpdateView):
+    def test_func(self):
+        obj = self.get_object()
+        return obj.author == self.request.user
+
+class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
     model = Post
     form_class = PostUpdateForm
     template_name_suffix = '_update_form'
@@ -121,8 +126,11 @@ class PostUpdateView(LoginRequiredMixin, generic.UpdateView):
         pk = self.kwargs["pk"]
         return reverse("posts:detail", kwargs={"pk": pk})
 
+    def test_func(self):
+        obj = self.get_object()
+        return obj.author == self.request.user
+
 @login_required
-@user_is_entry_author
 def toggle_reaction(request, object_id, object_type):
     user = get_object_or_404(User, pk=request.user.id)
     object = None
