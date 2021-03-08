@@ -23,10 +23,10 @@
 {% endfor %}
 
 {% include 'posts/partials/_comments_new.html' with id=post.id %}
+<a href="{% url 'posts:delete-post' post.id %}">Delete</a>
 
 {% if post.author == user %}
 
-<a href="{% url 'posts:delete-post' post.id %}">Delete</a>
 <a href="{% url 'posts:update-post' post.id %}">Edit</a>
 
 {% endif %}
