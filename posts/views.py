@@ -9,7 +9,8 @@ from django.contrib.auth.models import User
 # from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
+from posts.utils.mixins import UserIsAuthorMixin
 from django.views.generic.edit import ModelFormMixin, DeleteView, UpdateView
 from posts.forms import PostsForm, CommentsForm, ReactionsForm, PostUpdateForm
 from django.contrib import messages
@@ -104,20 +105,15 @@ class DetailView(LoginRequiredMixin,generic.DetailView):
             return post
 
 
-class PostsDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView):
+class PostsDeleteView(LoginRequiredMixin, UserIsAuthorMixin, generic.DeleteView):
     # specify the model you want to use
     model = Post
-
     # can specify success url
-    # url to redirect after sucessfully
+    # url to redirect after successfully
     # deleting object
     success_url = "/"
 
-    def test_func(self):
-        obj = self.get_object()
-        return obj.author == self.request.user
-
-class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
+class PostUpdateView(LoginRequiredMixin, UserIsAuthorMixin, generic.UpdateView):
     model = Post
     form_class = PostUpdateForm
     template_name_suffix = '_update_form'
@@ -125,10 +121,6 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView
     def get_success_url(self):
         pk = self.kwargs["pk"]
         return reverse("posts:detail", kwargs={"pk": pk})
-
-    def test_func(self):
-        obj = self.get_object()
-        return obj.author == self.request.user
 
 @login_required
 def toggle_reaction(request, object_id, object_type):
@@ -172,9 +164,8 @@ def create_post(request):
 
         if form.is_valid():
             # process the data in form.cleaned_data as required
-            # ...
             post = form.save(commit=False)
-            post.author = request.user
+            post.author = user
             post.save()
             messages.success(request, 'Form submission successful')
             # redirect to a new URL:
@@ -200,12 +191,10 @@ def create_comment(request, post_id):
 
             if form.is_valid():
                 # process the data in form.cleaned_data as required
-                # ...
                 comment = form.save(commit=False)
-                comment.author = request.user
+                comment.author = user
                 comment.post = post
                 comment.save()
-                print("Successfully saved.")
                 messages.success(request, 'Comment submission successful')
                 # redirect to a new URL:
                 return redirect(reverse('posts:detail', args=(post.id,)))
