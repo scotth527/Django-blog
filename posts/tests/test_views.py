@@ -150,12 +150,12 @@ class PostsDeleteView(TestCase):
     def test_a_post_is_successfully_deleted_if_it_user_is_author(self):
         login(self.client)
         delete_url = f'/posts/{self.post.id}/delete/'
-        delete_response = self.client.post(delete_url, {})
-        self.assertRedirects(delete_response, self.index_url)
+        delete_response = self.client.post(delete_url, {}, follow=True)
+        self.assertRedirects(delete_response, 'posts/', status_code=302, target_status_code=200, fetch_redirect_response=True)
 
     def test_a_delete_is_unsuccessful_if_user_is_not_author(self):
-        login(self.client)
-        user2 = User.objects.create_user('joe', 'bigdog@wwe.com', 'joepassword')
+        # login(self.client)
+        User.objects.create_user('joe', 'bigdog@wwe.com', 'joepassword')
         user = User.objects.get(username='joe')
         #  profile = Profile.objects.get_or_create(first_name="Joe", last_name="Somebody", address="125 Fake Street",
                                           #       city="Miami", state="FL", user=user)
@@ -164,7 +164,17 @@ class PostsDeleteView(TestCase):
         delete_response = self.client.post(delete_url)
         self.assertEqual(delete_response.status_code, 403)
 
+class PostsUpdateView(TestCase):
+    def setUp(self):
+            create_user()
+            self.client = Client()
+            self.user = User.objects.get(email="youcantseeme@wwe.com")
+            self.post = create_post("You never know what you are going to get", "Life is a box of chocolates.", self.user, -3)
+            self.index_url = reverse('posts:index')
 
 
+    def test_user_successfully_updates_post_if_user_is_author(self):
+        login(self.client)
+        edit_url = reverse('posts:update-post', kwargs={'pk': self.post.id})
 
 
