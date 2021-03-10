@@ -2,7 +2,7 @@
 from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from profiles.forms import SignUpForm
+from profiles.forms import SignUpForm, FriendshipRequestForm
 from django.views import generic
 from django.contrib.auth.models import User
 from .models import Profile
@@ -10,7 +10,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.forms import AuthenticationForm
-
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseNotFound
 
 def signup(request):
     if request.method == 'POST':
@@ -53,12 +54,28 @@ def signin(request):
 
     else:
         return render(request, 'profiles/signin.html', {'form': form})
-    pass
 
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse('profiles:login'))
     # Redirect to a success page.
+
+@login_required
+def request_friendship(request, requestee_id):
+    if request.method == 'POST':
+        form = FriendshipRequestForm(request.POST)
+        if form.is_valid():
+            friend_request = form.save(commit=False)
+            friend_request.status = "Pending"
+            friend_request.requester = request.user
+            friend_request.requestee = requestee_id
+            friend_request.save()
+
+            messages.success(request, "Friend request has been sent.")
+            return redirect('posts:index')
+    else:
+        return HttpResponseNotFound("404 Route not found.")
+
 
 class DetailView(LoginRequiredMixin, generic.DetailView):
     model = Profile

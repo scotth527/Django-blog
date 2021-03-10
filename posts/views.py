@@ -144,7 +144,7 @@ def toggle_reaction(request, object_id, object_type):
             reaction.content_object = object
             reaction.save()
 
-        else:
+        elif user_has_reacted_to_object:
             user_reaction.delete()
 
         return redirect(request.META.get('HTTP_REFERER', 'posts:index'))
