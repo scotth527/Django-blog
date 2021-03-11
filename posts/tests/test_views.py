@@ -156,9 +156,6 @@ class PostsDeleteView(TestCase):
     def test_a_delete_is_unsuccessful_if_user_is_not_author(self):
         # login(self.client)
         User.objects.create_user('joe', 'bigdog@wwe.com', 'joepassword')
-        user = User.objects.get(username='joe')
-        #  profile = Profile.objects.get_or_create(first_name="Joe", last_name="Somebody", address="125 Fake Street",
-                                          #       city="Miami", state="FL", user=user)
         self.client.login(username='joe', password='joepassword')
         delete_url = f'/posts/{self.post.id}/delete/'
         delete_response = self.client.post(delete_url)
@@ -176,5 +173,14 @@ class PostsUpdateView(TestCase):
     def test_user_successfully_updates_post_if_user_is_author(self):
         login(self.client)
         edit_url = reverse('posts:update-post', kwargs={'pk': self.post.id})
+        edit_response = self.client.post(edit_url, {"post_body": "YOU CANNOT SEE ME" }, follow=True)
+        self.assertEqual(edit_response.status_code, 200)
+        self.assertContains(edit_response, "YOU CANNOT SEE ME")
 
+    def test_user_gets_403_if_user_is_not_author_of_post(self):
+        User.objects.create_user('joe', 'bigdog@wwe.com', 'joepassword')
+        self.client.login(username='joe', password='joepassword')
+        edit_url = reverse('posts:update-post', kwargs={'pk': self.post.id})
+        edit_response = self.client.post(edit_url, {"post_body": "YOU CANNOT SEE ME"}, follow=True)
+        self.assertEqual(edit_response.status_code, 403)
 
