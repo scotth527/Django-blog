@@ -3,7 +3,9 @@
 <h1>{{ profile.user.username }}</h1>
 
 {% if error_message %}<p><strong>{{error_message}}</strong></p>{% endif %}
-
+{% if is_user_profile %}
+This is the current user's profile.
+{% endif %}
 {% if profile.user != user %}
 {% include 'profiles/partials/_friendship_request_form.html' with id=profile.user.id %}
 {% endif %}
