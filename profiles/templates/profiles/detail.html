@@ -4,6 +4,9 @@
 
 {% if error_message %}<p><strong>{{error_message}}</strong></p>{% endif %}
 
+{% if profile.user != user %}
+{% include 'profiles/partials/_friendship_request_form.html' with id=profile.user.id %}
+{% endif %}
 <!--Action is what should happen after submit -->
 <div>
     <p>{{profile.first_name}}</p>
