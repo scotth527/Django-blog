@@ -3,6 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 import datetime
 #from django.contrib.auth import LoginView
+from .models import Friendship
 
 class SignUpForm(UserCreationForm):
     first_name = forms.CharField(max_length=30, required=True)
@@ -18,5 +19,7 @@ class SignUpForm(UserCreationForm):
         fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2', )
 
 class FriendshipRequestForm(forms.ModelForm):
-    pass
+    class Meta:
+        model = Friendship
+        fields = ('')
 
