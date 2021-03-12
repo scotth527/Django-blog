@@ -21,5 +21,5 @@ class SignUpForm(UserCreationForm):
 class FriendshipRequestForm(forms.ModelForm):
     class Meta:
         model = Friendship
-        fields = ('')
+        fields = ('status',)
 

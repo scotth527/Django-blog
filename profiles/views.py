@@ -5,13 +5,14 @@ from django.contrib import messages
 from profiles.forms import SignUpForm, FriendshipRequestForm
 from django.views import generic
 from django.contrib.auth.models import User
-from .models import Profile
+from .models import Profile, Friendship
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseNotFound
+from django.shortcuts import render, get_object_or_404, redirect
 
 def signup(request):
     if request.method == 'POST':
@@ -62,13 +63,13 @@ def logout_view(request):
 
 @login_required
 def request_friendship(request, requestee_id):
+    requestee = get_object_or_404(User, pk=requestee_id)
     if request.method == 'POST':
         form = FriendshipRequestForm(request.POST)
         if form.is_valid():
             friend_request = form.save(commit=False)
-            friend_request.status = "Pending"
             friend_request.requester = request.user
-            friend_request.requestee = requestee_id
+            friend_request.requestee = requestee
             friend_request.save()
 
             messages.success(request, "Friend request has been sent.")
@@ -82,6 +83,14 @@ class DetailView(LoginRequiredMixin, generic.DetailView):
     template_name = 'profiles/detail.html'
     # login_url = '/profiles/login'
     # redirect_field_name = 'redirect_to'
+
+    def get_context_data(self, **kwargs):
+        context = super(DetailView, self).get_context_data(**kwargs)
+        context.is_user_profile = self.request.user.id == kwargs['pk']
+        if context.is_user_profile:
+            pending_friend_requests = Friendship.objects.filter(requestor = self.request.user, status = "Pending")
+            context.pending_friend_requests = pending_friend_requests
+        return context
 
     def get_queryset(self):
             """
