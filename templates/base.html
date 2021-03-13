@@ -10,7 +10,7 @@
 </head>
 
 <body>
-<nav class="d-flex bg bg-dark">
+<nav class="d-flex bg bg-dark text-light">
     {% if user.is_authenticated %}
     <h2><a href="{% url 'posts:index' %}">Home</a></h2>
     <h1> Welcome {{user.profile.first_name }} is authenticated</h1>

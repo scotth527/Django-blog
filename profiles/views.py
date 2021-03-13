@@ -13,6 +13,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404, redirect
+import pdb
 
 def signup(request):
     if request.method == 'POST':
@@ -86,10 +87,13 @@ class DetailView(LoginRequiredMixin, generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(DetailView, self).get_context_data(**kwargs)
-        context.is_user_profile = self.request.user.id == kwargs['pk']
-        if context.is_user_profile:
-            pending_friend_requests = Friendship.objects.filter(requestor = self.request.user, status = "Pending")
-            context.pending_friend_requests = pending_friend_requests
+
+        context['is_user_profile'] = self.request.user.id == self.kwargs["pk"]
+        # pdb.set_trace()
+        if context['is_user_profile']:
+            pending_friend_requests = Friendship.objects.filter(requester=self.request.user, status="Pending")
+            context['pending_friend_requests'] = pending_friend_requests
+            print("Pending Friend Requests ", pending_friend_requests)
         return context
 
     def get_queryset(self):
