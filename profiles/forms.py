@@ -5,7 +5,9 @@ import datetime
 #from django.contrib.auth import LoginView
 from .models import Friendship
 
-STATUS_CHOICES = ("Pending", "Accept", "Decline")
+STATUS_CHOICES = (("Pending", "Pending"),
+                  ("Accept", "Accept"),
+                  ("Decline", "Decline"))
 
 class SignUpForm(UserCreationForm):
     first_name = forms.CharField(max_length=30, required=True)
@@ -25,6 +27,11 @@ class FriendshipRequestForm(forms.ModelForm):
         model = Friendship
         fields = ('status',)
 
-class FriendshipUpdateForm(FriendshipRequestForm):
-    status = forms.ChoiceField(choices=STATUS_CHOICES)
+class FriendshipUpdateForm(forms.ModelForm):
+      status = forms.CharField(max_length=30, widget=forms.Select(choices=STATUS_CHOICES), required=True)
+
+      class Meta:
+          model = Friendship
+          fields = ('status',)
+
 

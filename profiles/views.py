@@ -14,7 +14,9 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db import IntegrityError
+from profiles.utils.mixins import UserIsRequesteeMixin
 import pdb
+
 
 def signup(request):
     if request.method == 'POST':
@@ -52,17 +54,19 @@ def signin(request):
 
         else:
             # Return an 'invalid login' error message.
-            messages.error(request,'Username or password not correct.')
+            messages.error(request, 'Username or password not correct.')
             return redirect('profiles:login')
 
     else:
         return render(request, 'profiles/signin.html', {'form': form})
+
 
 @login_required
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse('profiles:login'))
     # Redirect to a success page.
+
 
 @login_required
 def request_friendship(request, requestee_id):
@@ -80,7 +84,8 @@ def request_friendship(request, requestee_id):
     else:
         return HttpResponseNotFound("404 Route not found.")
 
-class FriendshipUpdateView(LoginRequiredMixin, generic.UpdateView):
+
+class FriendshipUpdateView(LoginRequiredMixin, UserIsRequesteeMixin, generic.UpdateView):
     model = Friendship
     form_class = FriendshipUpdateForm
     template_name_suffix = '_update_form'
@@ -93,13 +98,13 @@ class FriendshipUpdateView(LoginRequiredMixin, generic.UpdateView):
 class DetailView(LoginRequiredMixin, generic.DetailView):
     model = Profile
     template_name = 'profiles/detail.html'
-    # login_url = '/profiles/login'
-    # redirect_field_name = 'redirect_to'
+    form_class = FriendshipUpdateForm
 
     def get_context_data(self, **kwargs):
         context = super(DetailView, self).get_context_data(**kwargs)
-
-        context['is_user_profile'] = self.request.user.id == self.kwargs["pk"]
+        profile_belongs_to_user = self.request.user.id == self.kwargs["pk"]
+        context['form'] = self.form_class if profile_belongs_to_user else None
+        context['is_user_profile'] = profile_belongs_to_user
         # pdb.set_trace()
         if context['is_user_profile']:
             pending_friend_requests = Friendship.objects.filter(requester=self.request.user, status="Pending")
@@ -108,7 +113,7 @@ class DetailView(LoginRequiredMixin, generic.DetailView):
         return context
 
     def get_queryset(self):
-            """
+        """
             TODO Determine criteria for filtering
             """
-            return Profile.objects
+        return Profile.objects

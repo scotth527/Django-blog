@@ -6,6 +6,12 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save
 # Create your models here.
 
+FRIENDSHIP_STATUS_CHOICES = (
+                  ("Pending", "Pending"),
+                  ("Accept", "Accept"),
+                  ("Decline", "Decline")
+)
+
 class Profile(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
@@ -29,7 +35,7 @@ class Profile(models.Model):
             return self.first_name + " " + self.last_name
 
 class Friendship(models.Model):
-      status = models.CharField(max_length=50, default="Pending")
+      status = models.CharField(max_length=50, choices=FRIENDSHIP_STATUS_CHOICES, default="Pending")
       requester = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='requester')
       requestee = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='requestee')
 
