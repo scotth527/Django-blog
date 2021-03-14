@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.views import generic
 from .models import Post, Comment, Reaction
+from profiles.models import Friendship
 from django.contrib.auth.models import User
 # from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import login_required
@@ -35,12 +36,21 @@ class IndexView(LoginRequiredMixin, generic.ListView ):
         return context
 
     def get_queryset(self):
-        """Return the last five posts."""
+        """Return the last ten posts."""
         # pub_date__lte means less than or equal to, today
-        current_posts = Post.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')[:5]
+        user = self.request.user
+        current_posts = Post.objects.filter(pub_date__lte=timezone.now(), author=user).order_by('-pub_date')[:10]
+
+        criteria1 = Q(requester=user)
+        criteria2 = Q(requestee=user)
+        criteria3 = Q(status="Accept")
+        friend_list = Friendship.objects.filter( (criteria1 | criteria2) & criteria3)
+
+        print("Friendship list", friend_list)
+        # self.request.user.
         # current_posts.annotate(is_liked_by_user=check_existing_dictionary_in_list('reactions', "user", self.request.user))
         for post in current_posts:
-            post.is_liked_by_user = check_existing_dictionary_in_list(post.reactions.all(), "user", self.request.user)
+            post.is_liked_by_user = check_existing_dictionary_in_list(post.reactions.all(), "user", user)
 
         return current_posts
 
