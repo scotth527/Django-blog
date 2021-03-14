@@ -11,4 +11,5 @@ urlpatterns = [
     url( r'^logout/$', views.logout_view, name="logout"),
     path('<int:pk>/', views.DetailView.as_view(), name='detail'),
     path('<int:requestee_id>/friend-request', views.request_friendship, name='friend-request'),
+    path('<int:pk>/friend-request-update', views.FriendshipUpdateView.as_view(), name='friend-request-update')
 ]

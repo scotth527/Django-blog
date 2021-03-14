@@ -2,7 +2,7 @@
 from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from profiles.forms import SignUpForm, FriendshipRequestForm
+from profiles.forms import SignUpForm, FriendshipRequestForm, FriendshipUpdateForm
 from django.views import generic
 from django.contrib.auth.models import User
 from .models import Profile, Friendship
@@ -13,6 +13,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404, redirect
+from django.db import IntegrityError
 import pdb
 
 def signup(request):
@@ -57,6 +58,7 @@ def signin(request):
     else:
         return render(request, 'profiles/signin.html', {'form': form})
 
+@login_required
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse('profiles:login'))
@@ -77,6 +79,15 @@ def request_friendship(request, requestee_id):
             return redirect('posts:index')
     else:
         return HttpResponseNotFound("404 Route not found.")
+
+class FriendshipUpdateView(LoginRequiredMixin, generic.UpdateView):
+    model = Friendship
+    form_class = FriendshipUpdateForm
+    template_name_suffix = '_update_form'
+
+    def get_success_url(self):
+        pk = self.kwargs["pk"]
+        return reverse("profiles:detail", kwargs={"pk": self.request.user.id})
 
 
 class DetailView(LoginRequiredMixin, generic.DetailView):

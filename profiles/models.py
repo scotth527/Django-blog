@@ -33,3 +33,5 @@ class Friendship(models.Model):
       requester = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='requester')
       requestee = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='requestee')
 
+      class Meta:
+        unique_together = ('requester', 'requestee')
