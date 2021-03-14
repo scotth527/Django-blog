@@ -59,9 +59,11 @@ class DetailView(LoginRequiredMixin,generic.DetailView):
             comments = post.comment_set.all()
             post.is_liked_by_user = check_existing_dictionary_in_list(post.reactions.all(), "user", self.request.user)
             # comments.annotate(is_liked_by_user=Count('reactions', filter=Q(reactions__user=self.request.user)))
-            comments.annotate(is_liked_by_user=Count('reactions'), filter=Q(reactions__user=self.request.user))
-
-            # print("Commments", comments, comments[0].is_liked_by_user)
+            comments.annotate(
+                is_liked_by_user=Count('reactions__reaction', filter=Q(reactions__user=self.request.user))
+            )
+            user = comments[0].reactions.all()[0].user
+            print("Commments", comments, user)
             # comments.annotate(is_liked_by_user=Count('reactions'))
             # for i, comment in enumerate(comments):
                # print("Comment is liked", comment.is_liked_by_user)

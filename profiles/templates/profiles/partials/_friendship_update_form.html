@@ -1,7 +1,6 @@
 <form method="post" action="/profiles/{{id}}/friend-request-update">
     {% csrf_token %}
-     {{ form.as_p }}
-
+    {{ form.as_p }}
     <button class="btn btn-primary" type="submit">
         Respond
     </button>
