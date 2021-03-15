@@ -6,6 +6,7 @@ from django.utils import timezone
 from django.views import generic
 from .models import Post, Comment, Reaction
 from profiles.models import Friendship
+from profiles.utils.utils import get_friendlist
 from django.contrib.auth.models import User
 # from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import login_required
@@ -39,24 +40,13 @@ class IndexView(LoginRequiredMixin, generic.ListView ):
         """Return the last ten posts."""
         # pub_date__lte means less than or equal to, today
         user = self.request.user
+        friend_list = get_friendlist(user)
 
+        non_future_post = Q(pub_date__lte=timezone.now())
+        post_belongs_to_user = Q(author=user)
+        post_belongs_to_friend = Q(author__in=friend_list)
+        current_posts = Post.objects.filter( non_future_post & (post_belongs_to_user | post_belongs_to_friend)).order_by('-pub_date')[:10]
 
-        # Creates a friendlist
-        criteria1 = Q(requester=user)
-        criteria2 = Q(requestee=user)
-        criteria3 = Q(status="Accept")
-        friend_query = Friendship.objects.filter((criteria1 | criteria2) & criteria3)
-        friend_list = [ (friendship.requestee if friendship.requestee != user else friendship.requester) for friendship in friend_query ]
-
-        crit1 = Q(pub_date__lte=timezone.now())
-        crit2 = Q(author=user)
-        crit3 = Q(author__in=friend_list)
-        current_posts = Post.objects.filter( crit1 & (crit2 | crit3)).order_by('-pub_date')[:10]
-
-        print("Friendship list", friend_list)
-        print("Current Posts", current_posts)
-        # self.request.user.
-        # current_posts.annotate(is_liked_by_user=check_existing_dictionary_in_list('reactions', "user", self.request.user))
         for post in current_posts:
             post.is_liked_by_user = check_existing_dictionary_in_list(post.reactions.all(), "user", user)
 

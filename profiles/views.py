@@ -67,6 +67,38 @@ def logout_view(request):
     return HttpResponseRedirect(reverse('profiles:login'))
     # Redirect to a success page.
 
+class FriendshipIndexView(LoginRequiredMixin, generic.ListView ):
+    template_name = 'friendships/index.html'
+    context_object_name = 'accepted-friendlist'
+    form_class = FriendshipUpdateForm
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get the context
+        context = super(FriendshipIndexView, self).get_context_data(**kwargs)
+        # Create any data and add it to the context
+        context['form'] = self.form_class
+
+        return context
+
+    def get_queryset(self):
+        """Return the last ten posts."""
+        # pub_date__lte means less than or equal to, today
+        user = self.request.user
+
+        crit1 = Q(pub_date__lte=timezone.now())
+        crit2 = Q(author=user)
+        crit3 = Q(author__in=friend_list)
+        current_posts = Post.objects.filter( crit1 & (crit2 | crit3)).order_by('-pub_date')[:10]
+
+        print("Friendship list", friend_list)
+        print("Current Posts", current_posts)
+        # self.request.user.
+        # current_posts.annotate(is_liked_by_user=check_existing_dictionary_in_list('reactions', "user", self.request.user))
+        for post in current_posts:
+            post.is_liked_by_user = check_existing_dictionary_in_list(post.reactions.all(), "user", user)
+
+        return current_posts
+
 
 @login_required
 def request_friendship(request, requestee_id):
