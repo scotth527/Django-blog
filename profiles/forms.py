@@ -5,7 +5,7 @@ import datetime
 #from django.contrib.auth import LoginView
 from .models import Friendship
 
-STATUS_CHOICES = (("Pending", "Pending"),
+STATUS_CHOICES = (
                   ("Accept", "Accept"),
                   ("Decline", "Decline"))
 
