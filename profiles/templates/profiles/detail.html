@@ -12,6 +12,9 @@ This is the current user's profile.
 <div>User: {{ request.requestee.username }}</div>
 {% endfor %}
 
+
+<a href="{% url 'profiles:friend-list' profile.id %}">Friends</a>
+
 {% endif %}
 {% if profile.user != user %}
 {% include 'profiles/partials/_friendship_request_form.html' with id=profile.user.id %}
