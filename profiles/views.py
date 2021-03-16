@@ -14,7 +14,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db import IntegrityError
-from profiles.utils.mixins import UserIsRequesteeMixin
+from profiles.utils.mixins import UserIsRequesteeMixin, UserIsRequesteeOrRequesterMixin
 from profiles.utils.utils import get_friendlist
 import pdb
 
@@ -86,7 +86,7 @@ def signin(request):
         return render(request, 'profiles/signin.html', {'form': form})
 
 
-@login_required
+
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse('profiles:login'))
@@ -142,7 +142,7 @@ class FriendshipUpdateView(LoginRequiredMixin, UserIsRequesteeMixin, generic.Upd
         return reverse("profiles:detail", kwargs={"pk": self.request.user.id})
 
 
-class FriendshipDeleteView(LoginRequiredMixin, generic.DeleteView):
+class FriendshipDeleteView(LoginRequiredMixin, UserIsRequesteeOrRequesterMixin, generic.DeleteView):
     # specify the model you want to use
     model = Friendship
     # can specify success url

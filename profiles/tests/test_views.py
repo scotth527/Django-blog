@@ -83,9 +83,7 @@ class LogoutView(TestCase):
         self.client = Client()
 
     def test_that_logout_is_successful(self):
-        login_response = self.client.post(
-                            "/profiles/login/", data={"username": "john", "password" :"johnpassword"}
-                        )
+        login(self.client)
         logout_response = self.client.get('/profiles/logout/', follow=True)
         self.assertRedirects(logout_response, '/profiles/login/', status_code=302, target_status_code=200, fetch_redirect_response=True)
 
