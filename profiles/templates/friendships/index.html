@@ -2,3 +2,20 @@
 {% load static %}
 
 <link rel="stylesheet" type="text/css" href="{% static 'posts/style.css' %}">
+{% block content %}
+<h1>Friend List</h1>
+{% if accepted_friendlist %}
+    {% for friendship in accepted_friendlist %}
+
+    <p>Username: {{friendship.username}}</p>
+    <p>Email: {{friendship.email}}</p>
+    <p>Friendship ID {{friendship.friendship_id}}</p>
+
+    {% include 'friendships/partials/_friendship_delete_form.html' with id=friendship.friendship_id %}
+
+    {% endfor %}
+
+{% else %}
+    <h1>Looks like you don't have any friends. Time to start making some!</h1>
+{% endif %}
+{% endblock %}

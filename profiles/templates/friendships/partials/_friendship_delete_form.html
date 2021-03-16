@@ -1,0 +1,6 @@
+<form method="post" action="/profiles/{{id}}/friendship-delete/">
+    {% csrf_token %}
+    <button class="btn btn-danger" type="submit">
+        Unfriend
+    </button>
+</form>
