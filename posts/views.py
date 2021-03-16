@@ -70,8 +70,7 @@ class DetailView(LoginRequiredMixin,generic.DetailView):
             comments.annotate(
                 is_liked_by_user=Count('reactions__reaction', filter=Q(reactions__user=self.request.user))
             )
-            user = comments[0].reactions.all()[0].user
-            print("Commments", comments, user)
+
             # comments.annotate(is_liked_by_user=Count('reactions'))
             # for i, comment in enumerate(comments):
                # print("Comment is liked", comment.is_liked_by_user)

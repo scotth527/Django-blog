@@ -103,10 +103,15 @@ class PostsIndexView(TestCase):
             create_user()
             self.client = Client()
             self.user = User.objects.get(email="youcantseeme@wwe.com")
+            self.index_url = reverse('posts:index')
 
 
     def test_only_friends_and_your_own_posts_show_up_on_feed(self):
-        pass
+        login(self.client)
+        past_post = create_post("You never know what you are going to get", "Life is a box of chocolates.", self.user,
+                                -3)
+        index_response = self.client.get(self.index_url)
+        self.assertContains(index_response, "Life is a box of chocolates.")
 
     def test_that_you_need_to_be_logged_in_to_see_index(self):
         url = reverse('posts:index')
