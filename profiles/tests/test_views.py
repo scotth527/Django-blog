@@ -87,5 +87,26 @@ class LogoutView(TestCase):
         logout_response = self.client.get('/profiles/logout/', follow=True)
         self.assertRedirects(logout_response, '/profiles/login/', status_code=302, target_status_code=200, fetch_redirect_response=True)
 
+class FriendshipRequestView(TestCase):
+    def setUp(self):
+        self.client = Client()
+        create_user()
+        self.user = User.objects.get(email="youcantseeme@wwe.com")
+        self.user2 = User.objects.create_user('billy', 'billy@wwe.com', 'billypassword')
+
+    def test_that_friendship_request_is_successful_if_logged_in(self):
+        login(self.client)
+        friendship_url = reverse('profiles:friend-request', kwargs={'requestee_id': self.user2.id})
+        friendrequest_response = self.client.post(friendship_url, {"status":"Accept"}, follow=True)
+        self.assertEquals(friendrequest_response.status_code, 200)
 
 
+class FriendshipUpdateView(TestCase):
+    def setUp(self):
+        self.client = Client()
+        create_user()
+        self.user = User.objects.get(email="youcantseeme@wwe.com")
+        self.user2 = User.objects.create_user('billy', 'billy@wwe.com', 'billypassword')
+
+    def test_that_friendship_request_can_be_updated_if_user_is_requestee(self):
+        pass

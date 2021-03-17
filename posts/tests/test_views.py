@@ -124,7 +124,6 @@ class PostsIndexView(TestCase):
     def test_posts_from_people_who_accepted_friendrequest_shows(self):
         login(self.client)
         friendship_url = reverse('profiles:friend-request', kwargs={'requestee_id':self.user2.id})
-        print("Friendship URL", friendship_url)
         friendrequest_response = self.client.post(friendship_url, {"status":"Accept"}, follow=True)
         self.assertEquals(friendrequest_response.status_code, 200)
         index_response = self.client.get(self.index_url)
