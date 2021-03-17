@@ -127,7 +127,7 @@ def request_friendship(request, requestee_id):
             friend_request.save()
 
             messages.success(request, "Friend request has been sent.")
-            return redirect('posts:index')
+            return HttpResponseRedirect(reverse('posts:index'))
     else:
         return HttpResponseNotFound("404 Route not found.")
 
