@@ -103,20 +103,33 @@ class PostsIndexView(TestCase):
             create_user()
             self.client = Client()
             self.user = User.objects.get(email="youcantseeme@wwe.com")
+            self.user2 = User.objects.create_user('billy', 'billy@wwe.com', 'billypassword')
             self.index_url = reverse('posts:index')
-
-
-    def test_only_friends_and_your_own_posts_show_up_on_feed(self):
-        login(self.client)
-        past_post = create_post("You never know what you are going to get", "Life is a box of chocolates.", self.user,
-                                -3)
-        index_response = self.client.get(self.index_url)
-        self.assertContains(index_response, "Life is a box of chocolates.")
+            non_friend_post = create_post("You got this!", "Self Care Rules", self.user2,
+                                          -3)
 
     def test_that_you_need_to_be_logged_in_to_see_index(self):
         url = reverse('posts:index')
         response = self.client.get(url)
         self.assertEqual(response.status_code, 302)
+
+    def test_posts_from_nonfriends_do_not_show_up(self):
+        login(self.client)
+        past_post = create_post("You never know what you are going to get", "Life is a box of chocolates.", self.user,
+                                -3)
+        index_response = self.client.get(self.index_url)
+        self.assertContains(index_response, "Life is a box of chocolates.")
+        self.assertNotContains(index_response, "Self Care Rules")
+
+    def test_posts_from_people_who_accepted_friendrequest_shows(self):
+        login(self.client)
+        friendship_url = reverse('profiles:friend-request', kwargs={'requestee_id':self.user2.id})
+        print("Friendship URL", friendship_url)
+        friendrequest_response = self.client.post(friendship_url, {"status":"Accept"}, follow=True)
+        self.assertEquals(friendrequest_response.status_code, 200)
+        index_response = self.client.get(self.index_url)
+        print("Index response content", index_response.content)
+        self.assertContains(index_response,"Self Care Rules")
 
     def test_future_posts_are_not_included(self):
         future_post = create_post(body_sample, title, self.user, 4)
@@ -140,8 +153,6 @@ class PostsIndexView(TestCase):
         response = self.client.get(reverse('posts:index'))
         self.assertContains(response, "Life is a box of chocolates.")
 
-    def test_only_shows_posts_from_people_you_follow(self):
-        pass
 
 class PostsDeleteView(TestCase):
 
