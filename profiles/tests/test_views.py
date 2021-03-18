@@ -2,6 +2,7 @@ from django.test import TestCase, Client
 from django.contrib.auth.models import User
 # Create your tests here.
 from django.urls import reverse
+from profiles.models import Friendship
 from profiles.tests.helpers.utils import login, create_user
 import unittest
 
@@ -109,4 +110,14 @@ class FriendshipUpdateView(TestCase):
         self.user2 = User.objects.create_user('billy', 'billy@wwe.com', 'billypassword')
 
     def test_that_friendship_request_can_be_updated_if_user_is_requestee(self):
-        pass
+        login(self.client)
+        friendship_request_url = reverse('profiles:friend-request', kwargs={'requestee_id': self.user2.id})
+        friendrequest_response = self.client.post(friendship_request_url, {"status": "Pending"}, follow=True)
+        self.client.logout()
+
+        friendrequest = Friendship.objects.get(requestee=self.user2, requester=self.user)
+        self.client.login(username='billy', password='billypassword')
+        friendship_update_request_url = reverse('profiles:friend-request-update', kwargs={'pk': friendrequest.id})
+        print("Friendship update", friendship_update_request_url)
+        friendship_update = self.client.post(friendship_update_request_url, {"status":"Accept"}, follow=True)
+        self.assertEquals(friendship_update.status_code, 200)

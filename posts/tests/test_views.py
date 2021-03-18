@@ -127,7 +127,6 @@ class PostsIndexView(TestCase):
         friendrequest_response = self.client.post(friendship_url, {"status":"Accept"}, follow=True)
         self.assertEquals(friendrequest_response.status_code, 200)
         index_response = self.client.get(self.index_url)
-        print("Index response content", index_response.content)
         self.assertContains(index_response,"Self Care Rules")
 
     def test_future_posts_are_not_included(self):
