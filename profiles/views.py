@@ -150,3 +150,24 @@ class FriendshipDeleteView(LoginRequiredMixin, UserIsRequesteeOrRequesterMixin, 
     # deleting object
     def get_success_url(self):
         return reverse("profiles:friend-list", kwargs={"pk": self.request.user.id})
+
+class SearchUserIndexView(LoginRequiredMixin, generic.ListView):
+    """
+    Returns a list of friends
+    """
+    template_name = 'profiles/search_result.html'
+    context_object_name = 'search_result'
+    form_class = FriendshipUpdateForm
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get the context
+        context = super(FriendshipIndexView, self).get_context_data(**kwargs)
+        # Create any data and add it to the context
+        context['form'] = self.form_class
+
+        return context
+
+    def get_queryset(self):
+        """Return the user's friendlist. """
+        user = get_object_or_404(User,pk=self.kwargs["pk"])
+        return get_friendlist(user)

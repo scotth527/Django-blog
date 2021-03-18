@@ -14,6 +14,9 @@
     {% if user.is_authenticated %}
     <h2><a href="{% url 'posts:index' %}">Home</a></h2>
     <h1> Welcome {{user.profile.first_name }} is authenticated</h1>
+
+    {% include 'profiles/partials/_profile_search_form.html' %}
+
     <a href="{% url 'profiles:detail' user.id %}">Profile</a>
     <a href="{% url 'profiles:logout' %}">Logout</a>
 
