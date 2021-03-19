@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_sass',
+    'haystack',
     'posts.apps.PostsConfig',
     'profiles.apps.ProfilesConfig'
 ]
@@ -129,4 +130,11 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'posts/static/'),
     os.path.join(BASE_DIR, 'profiles/static/'),
 ]
+
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
+    },
+}
 

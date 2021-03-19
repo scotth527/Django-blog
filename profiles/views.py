@@ -157,7 +157,7 @@ class SearchUserIndexView(LoginRequiredMixin, generic.ListView):
     """
     template_name = 'profiles/search_result.html'
     context_object_name = 'search_result'
-    form_class = FriendshipUpdateForm
+    form_class = FriendshipRequestForm
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get the context
@@ -169,5 +169,5 @@ class SearchUserIndexView(LoginRequiredMixin, generic.ListView):
 
     def get_queryset(self):
         """Return the user's friendlist. """
-        user = get_object_or_404(User,pk=self.kwargs["pk"])
+        search_value = self.kwargs["pk"]
         return get_friendlist(user)
