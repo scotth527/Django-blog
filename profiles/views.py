@@ -17,7 +17,7 @@ from django.db import IntegrityError
 from profiles.utils.mixins import UserIsRequesteeMixin, UserIsRequesteeOrRequesterMixin
 from profiles.utils.utils import get_friendlist
 import pdb
-
+from haystack.query import SearchQuerySet
 
 def signup(request):
     if request.method == 'POST':

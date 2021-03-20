@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_sass',
     'haystack',
+    'whoosh',
     'posts.apps.PostsConfig',
     'profiles.apps.ProfilesConfig'
 ]
@@ -71,6 +72,7 @@ TEMPLATES = [
         },
     },
 ]
+
 
 WSGI_APPLICATION = 'microblog.wsgi.application'
 
