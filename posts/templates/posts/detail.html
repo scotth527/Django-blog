@@ -11,7 +11,7 @@
 {% include 'posts/partials/_toggle_reaction.html' with id=post.id is_liked=post.is_liked_by_user type="post" reaction_count=post.reactions.count %}
 
 <h5>Comments:</h5>
-{% for comment in post.comment_set.all %}
+{% for comment in comments %}
 
 <div>
     <p>{{comment.comment_body}}</p>
