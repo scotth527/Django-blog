@@ -67,17 +67,17 @@ class DetailView(LoginRequiredMixin,generic.DetailView):
             comments = post.comment_set.all()
             post.is_liked_by_user = check_existing_dictionary_in_list(post.reactions.all(), "user", self.request.user)
             # comments.annotate(is_liked_by_user=Count('reactions', filter=Q(reactions__user=self.request.user)))
-            comments.annotate(
-                is_liked_by_user=Count('reactions__reaction', filter=Q(reactions__user=self.request.user))
-            )
+            # comments.annotate(
+            #     is_liked_by_user=Count('reactions__reaction', filter=Q(reactions__user=self.request.user))
+            # )
 
             # comments.annotate(is_liked_by_user=Count('reactions'))
             # for i, comment in enumerate(comments):
-               # print("Comment is liked", comment.is_liked_by_user)
-                 # comment.is_liked_by_user = check_existing_dictionary_in_list(comment.reactions.all(), "user", self.request.user)
-              # print("Was comment liked by user?", comment.is_liked_by_user, comment.comment_body)
-                # comment.is_liked_by_user = check_existing_dictionary_in_list(comment.reactions.all(), "user", self.request.user)
-                # context['is_liked_by_user'] = check_existing_dictionary_in_list(post.reactions.all(), "user", self.request.user)
+            #      print("Comment is liked", comment.is_liked_by_user)
+            #      comment.is_liked_by_user = check_existing_dictionary_in_list(comment.reactions.all(), "user", self.request.user)
+            #      print("Was comment liked by user?", comment.is_liked_by_user, comment.comment_body)
+            #      comment.is_liked_by_user = check_existing_dictionary_in_list(comment.reactions.all(), "user", self.request.user)
+            #      # context['is_liked_by_user'] = check_existing_dictionary_in_list(post.reactions.all(), "user", self.request.user)
             # pdb.set_trace()
             return context
 
