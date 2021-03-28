@@ -1,12 +1,13 @@
 import datetime
 from haystack import indexes
-from profiles.models import  import Profile
+from profiles.models import Profile
 from django.contrib.auth.models import User
 
 class ProfileIndex(indexes.SearchIndex, indexes.Indexable):
     # document = True, main item being searched
     # use_template , can make template of fields from the main search field
-    first_name = indexes.CharField(document=True, use_template=True, model_attr='last_name')
+    text = indexes.EdgeNgramField(document=True, use_template=True)
+    first_name = indexes.CharField(model_attr='first_name')
     last_name = indexes.CharField(model_attr='last_name')
     address = indexes.CharField(model_attr='address')
     city = indexes.CharField(model_attr='city')

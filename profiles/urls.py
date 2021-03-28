@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from django.conf.urls import url
 from . import views
 
@@ -8,8 +8,9 @@ urlpatterns = [
     url(r'^signup/$', views.signup, name='signup'),
     url( r'^login/$', views.signin, name="login"),
     url( r'^logout/$', views.logout_view, name="logout"),
+    url(r'^search/', include('haystack.urls')),
     path('<int:pk>/', views.DetailView.as_view(), name='detail'),
-    path('<str:keyword>/search', views.SearchUserIndexView.as_view(), name='user-search'),
+    # path('<str:keyword>/search', views.SearchUserIndexView.as_view(), name='user-search'),
     path('<int:requestee_id>/friend-request', views.request_friendship, name='friend-request'),
     path('<int:pk>/friend-request-update', views.FriendshipUpdateView.as_view(), name='friend-request-update'),
     path('<int:pk>/friend-list', views.FriendshipIndexView.as_view(), name='friend-list'),
