@@ -20,4 +20,6 @@ class ProfileIndex(indexes.SearchIndex, indexes.Indexable):
 
     def index_queryset(self, using=None):
         """Used when the entire index for model is updated."""
-        return self.get_model().objects.filter()
+        users = self.get_model().objects.filter()
+        print("Users", users)
+        return users
