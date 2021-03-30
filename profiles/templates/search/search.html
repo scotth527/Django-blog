@@ -12,9 +12,12 @@
                     {% for result in page.object_list %}
 
 
-
                 <div class="col-sm-4">
                   <div class="thumbnail">
+
+                      <div class="form-group">
+                        <p>Id : {{result.id}} </p>
+                    </div>
 
                     <div class="form-group">
                         <p>First name : {{result.first_name}} </p>
@@ -22,14 +25,21 @@
 
                     <div class="form-group">
                         <p>Last name : {{result.last_name}} </p>
+                    </div>
 
+                      <div class="form-group">
+                        <p>City : {{result.city}} </p>
+                    </div>
+
+                      <div class="form-group">
+                        <p>State : {{result.state}} </p>
                     </div>
 
                     <div class="form-group">
-                        <p>Username : {{result.user.username}} </p>
+                        <p>Username : {{result.username}} </p>
                     </div>
                     <div class="form-group">
-                        <p>Email : {{result.user.username}} </p>
+                        <p>Email : {{result.email}} </p>
                     </div>
                   </div>
                 </div>

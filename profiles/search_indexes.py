@@ -12,6 +12,8 @@ class ProfileIndex(indexes.SearchIndex, indexes.Indexable):
     address = indexes.CharField(model_attr='address')
     city = indexes.CharField(model_attr='city')
     state = indexes.CharField(model_attr='state')
+    username = indexes.CharField()
+    email = indexes.CharField()
 
     content_auto = indexes.EdgeNgramField(model_attr='first_name')
 
@@ -20,6 +22,11 @@ class ProfileIndex(indexes.SearchIndex, indexes.Indexable):
 
     def index_queryset(self, using=None):
         """Used when the entire index for model is updated."""
-        users = self.get_model().objects.filter()
-        print("Users", users)
+        users = self.get_model().objects.filter().select_related('user')
         return users
+
+    def prepare_username(self, obj):
+        return obj.user.username
+
+    def prepare_email(self, obj):
+        return obj.user.email

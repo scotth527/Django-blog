@@ -1,4 +1,8 @@
 {{ object.first_name }}
 {{ object.last_name }}
-{{ object.user.username }}
-{{ object.user.email }}
+{{ object.id }}
+{{ object.city }}
+{{ object.state }}
+{{ object.user }}
+{{ object.username }}
+{{ object.email }}
