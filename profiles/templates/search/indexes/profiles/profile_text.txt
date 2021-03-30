@@ -6,3 +6,4 @@
 {{ object.user }}
 {{ object.username }}
 {{ object.email }}
+{{ object.user.email }}
