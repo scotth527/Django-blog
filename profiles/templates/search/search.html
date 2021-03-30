@@ -20,7 +20,8 @@
                     </div>
 
                     <div class="form-group">
-                        <p>First name : {{result.first_name}} </p>
+
+                        <p>First name : <a href="{% url 'profiles:detail' result.id %}">{{result.first_name}}</a> </p>
                     </div>
 
                     <div class="form-group">

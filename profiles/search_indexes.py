@@ -12,6 +12,7 @@ class ProfileIndex(indexes.SearchIndex, indexes.Indexable):
     address = indexes.CharField(model_attr='address')
     city = indexes.CharField(model_attr='city')
     state = indexes.CharField(model_attr='state')
+    id = indexes.CharField(model_attr='id')
     username = indexes.CharField()
     email = indexes.CharField()
 
