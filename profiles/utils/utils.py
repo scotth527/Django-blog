@@ -1,4 +1,4 @@
-from profiles.models import Friendship
+from profiles.models import Friendship, Profile
 from django.db.models import Q
 
 
@@ -18,3 +18,13 @@ def get_friendlist(user):
         friend_list[i].friendship_id = friendship.id
 
     return friend_list
+
+def get_friend_suggestions(user):
+    """
+        :param user: Must be an instance of the profile object
+        :return: A list of users that are in the same city that have not been friend requested.
+    """
+    profile_is_in_same_city = Q(city=user.city)
+    friendship_suggestion_query = Profile.objects.filter()
+
+    return friendship_suggestion_query

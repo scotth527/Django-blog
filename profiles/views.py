@@ -95,7 +95,7 @@ def logout_view(request):
 
 class FriendshipIndexView(LoginRequiredMixin, generic.ListView):
     """
-    Returns a list of friends
+    Returns a list of friends that have been accepted
     """
     template_name = 'friendships/index.html'
     context_object_name = 'accepted_friendlist'
@@ -104,6 +104,27 @@ class FriendshipIndexView(LoginRequiredMixin, generic.ListView):
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get the context
         context = super(FriendshipIndexView, self).get_context_data(**kwargs)
+        # Create any data and add it to the context
+        context['form'] = self.form_class
+
+        return context
+
+    def get_queryset(self):
+        """Return the user's friendlist. """
+        user = get_object_or_404(User,pk=self.kwargs["pk"])
+        return get_friendlist(user)
+
+class FriendshipSuggestionIndexView(LoginRequiredMixin, generic.ListView):
+    """
+    Returns a list of suggested friends, not already friends with
+    """
+    template_name = 'friendships/suggestions.html'
+    context_object_name = 'suggested_friendlist'
+    form_class = FriendshipRequestForm
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get the context
+        context = super(FriendshipSuggestionIndexView, self).get_context_data(**kwargs)
         # Create any data and add it to the context
         context['form'] = self.form_class
 
