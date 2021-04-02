@@ -25,6 +25,9 @@ def get_friend_suggestions(user):
         :return: A list of users that are in the same city that have not been friend requested.
     """
     profile_is_in_same_city = Q(city=user.city)
+    user_is_requester = Q(requester=user)
+    user_is_requestee = Q(requestee=user)
+
     friendship_suggestion_query = Profile.objects.filter()
 
     return friendship_suggestion_query

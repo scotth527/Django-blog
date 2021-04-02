@@ -16,10 +16,16 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.db import IntegrityError
 from profiles.utils.mixins import UserIsRequesteeMixin, UserIsRequesteeOrRequesterMixin
 from profiles.utils.utils import get_friendlist
-import pdb
 from haystack.query import SearchQuerySet
+import pdb
+
 
 def signup(request):
+    '''
+    Function is to create new profiles and at the same time creates new users
+    :param request:
+    :return:
+    '''
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
@@ -42,6 +48,7 @@ def signup(request):
     return render(request, 'profiles/signup.html', {'form': form})
 
 class DetailView(LoginRequiredMixin, generic.DetailView):
+    # TODO: Rename this function to make it more clear that it is for profile detail
     model = Profile
     template_name = 'profiles/detail.html'
     form_class = FriendshipUpdateForm
@@ -59,9 +66,6 @@ class DetailView(LoginRequiredMixin, generic.DetailView):
         return context
 
     def get_queryset(self):
-        """
-            TODO Determine criteria for filtering
-            """
         return Profile.objects
 
 
@@ -135,9 +139,17 @@ class FriendshipSuggestionIndexView(LoginRequiredMixin, generic.ListView):
         user = get_object_or_404(User,pk=self.kwargs["pk"])
         return get_friendlist(user)
 
+    # TODO: Complete this friendship suggestion function
+
 
 @login_required
 def request_friendship(request, requestee_id):
+    '''
+    Adds a new entry to the friendship table to establish a relationship between users
+    :param request:
+    :param requestee_id:
+    :return:
+    '''
     requestee = get_object_or_404(User, pk=requestee_id)
     if request.method == 'POST':
         form = FriendshipRequestForm(request.POST)

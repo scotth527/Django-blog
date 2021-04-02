@@ -22,14 +22,14 @@ from django.db.models.expressions import Case, When, Value, Exists
 from django.db.models import Count, Q
 from .decorators import user_is_author
 
-class IndexView(LoginRequiredMixin, generic.ListView ):
+class PostsIndexView(LoginRequiredMixin, generic.ListView ):
     template_name = 'posts/index.html'
     context_object_name = 'latest_post_list'
     form_class = PostsForm
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get the context
-        context = super(IndexView, self).get_context_data(**kwargs)
+        context = super(PostsIndexView, self).get_context_data(**kwargs)
         # Create any data and add it to the context
         context['form'] = PostsForm
         context['comment_form'] = CommentsForm
@@ -183,4 +183,13 @@ def create_comment(request, post_id):
         form = PostsForm()
 
         return render(request, 'posts/index.html', {'form': form})
-    pass
+
+    class CommentsDeleteView(LoginRequiredMixin, UserIsAuthorMixin, generic.DeleteView):
+        # specify the model you want to use
+        model = Comment
+        # can specify success url
+        # url to redirect after successfully
+        # deleting object
+        success_url = "/"
+
+        # TODO: create the url and functionality for this path
