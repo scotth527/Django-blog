@@ -19,7 +19,8 @@ from django.shortcuts import redirect
 
 
 urlpatterns = [
-    path('', lambda req: redirect('posts/')),
+    # path('', lambda req: redirect('posts/')),
+    path('', include('posts.urls')),
     path('profiles/', include('profiles.urls')),
     path('posts/', include('posts.urls')),
     path('admin/', admin.site.urls),

@@ -19,7 +19,7 @@ def get_friendlist(user):
 
     return friend_list
 
-def get_friend_suggestions(user):
+def get_friend_suggestions(user, suggestion_count = 5):
     """
         :param user: Must be an instance of the profile object
         :return: A list of users that are in the same city that have not been friend requested.
@@ -27,6 +27,7 @@ def get_friend_suggestions(user):
     profile = user.profile
     profile_is_in_same_city = Q(city=profile.city)
     profile_is_in_same_state = Q(state=profile.state)
+    is_not_user = ~Q(id=user.id)
     user_is_requester = Q(requester=user)
     user_is_requestee = Q(requestee=user)
 
@@ -34,7 +35,13 @@ def get_friend_suggestions(user):
     friend_list = [(friendship.requestee if friendship.requestee != user else friendship.requester) for friendship in
                    friendship_query]
 
-    friendship_suggestion_query = Profile.objects.exclude(user__in=friend_list).filter(profile_is_in_same_city & profile_is_in_same_state)[:5]
+    friendship_suggestion_query = Profile.objects.exclude(user__in=friend_list).filter(profile_is_in_same_city & profile_is_in_same_state & is_not_user)[:5]
+    friendship_suggestion_length = len(friendship_suggestion_query)
+    if friendship_suggestion_length < suggestion_count:
+        # Concatenate those in their same city/state with others not in their city up to 5
+        remaining_suggestion_count = suggestion_count - friendship_suggestion_length
+        people_not_in_user_city = Profile.objects.exclude(user__in=friend_list).filter(is_not_user)[:remaining_suggestion_count]
+        friendship_suggestion_query = friendship_suggestion_query | people_not_in_user_city
 
     # Get a list of users in the same city and same state and not already friend requested
     # If there is less than 5 remove the same city and same state

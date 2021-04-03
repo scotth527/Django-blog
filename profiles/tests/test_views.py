@@ -16,13 +16,13 @@ class ProfileDetailView(TestCase):
         self.assertEqual(go_to_login.status_code, 200)
         login(self.client)
         user = User.objects.get(email="youcantseeme@wwe.com")
-        profile_detail_response = self.client.get(f'/profiles/{user.id}/')
+        profile_detail_response = self.client.get(f'/profiles/{user.id}')
         self.assertContains(profile_detail_response, "john")
 
     def test_profile_detail_for_redirect_if_no_authentication(self):
         user = User.objects.get(email="youcantseeme@wwe.com")
-        profile_detail_response = self.client.get(f'/profiles/{user.id}/', follow=True)
-        self.assertRedirects(profile_detail_response, f'/profiles/login/?next=/profiles/{user.id}/', status_code=302, target_status_code=200)
+        profile_detail_response = self.client.get(f'/profiles/{user.id}', follow=True)
+        self.assertRedirects(profile_detail_response, f'/profiles/login/?next=/profiles/{user.id}', status_code=302, target_status_code=200)
 
 class SignUpView(TestCase):
     def setUp(self):
