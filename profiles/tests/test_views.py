@@ -67,7 +67,7 @@ class LoginView(TestCase):
                                     "/profiles/login/", data={"username": "john", "password" :"johnpassword"}, follow=True, secure=True
                                 )
         # print("Login Response on line 42", login_response.content)
-        self.assertRedirects(login_response, '/posts/', status_code=302, fetch_redirect_response=True)
+        self.assertRedirects(login_response, '/', status_code=302, fetch_redirect_response=True)
 
 
     def test_incorrect_password_shows_errors(self):

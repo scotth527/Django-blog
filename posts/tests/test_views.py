@@ -33,7 +33,7 @@ class PostCreateView(TestCase):
         login(self.client)
         go_to_index = self.client.get(self.index_route)
         post_response = self.client.post(self.create_post_route, self.post_data , follow=True )
-        self.assertRedirects(post_response, '/posts/', status_code=302, target_status_code=200, fetch_redirect_response=True)
+        self.assertRedirects(post_response, '/', status_code=302, target_status_code=200, fetch_redirect_response=True)
         self.assertContains(post_response, "Hello Darkness" )
 
     def test_post_detail_works_after_creation(self):
@@ -165,7 +165,7 @@ class PostsDeleteView(TestCase):
         login(self.client)
         delete_url = f'/posts/{self.post.id}/delete/'
         delete_response = self.client.post(delete_url, {}, follow=True)
-        self.assertRedirects(delete_response, 'posts/', status_code=302, target_status_code=200, fetch_redirect_response=True)
+        self.assertRedirects(delete_response, '/', status_code=302, target_status_code=200, fetch_redirect_response=True)
 
     def test_a_delete_is_unsuccessful_if_user_is_not_author(self):
         # login(self.client)
