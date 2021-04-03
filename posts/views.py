@@ -52,7 +52,7 @@ class PostsIndexView(LoginRequiredMixin, generic.ListView ):
 
         return current_posts
 
-class DetailView(LoginRequiredMixin,generic.DetailView):
+class PostsDetailView(LoginRequiredMixin,generic.DetailView):
     """"Returns the specified post, cannot show a post that has not been published yet."""
     model = Post
     template_name = 'posts/detail.html'
@@ -60,7 +60,7 @@ class DetailView(LoginRequiredMixin,generic.DetailView):
 
     def get_context_data(self, **kwargs):
             # Call the base implementation first to get the context
-            context = super(DetailView, self).get_context_data(**kwargs)
+            context = super(PostsDetailView, self).get_context_data(**kwargs)
             # Create any data and add it to the context
             context['form'] = self.form_class
             post = context['post']
