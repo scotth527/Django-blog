@@ -163,7 +163,7 @@ class PostsDeleteView(TestCase):
 
     def test_a_post_is_successfully_deleted_if_it_user_is_author(self):
         login(self.client)
-        delete_url = f'/posts/{self.post.id}/delete/'
+        delete_url = f'/posts/{self.post.id}/delete'
         delete_response = self.client.post(delete_url, {}, follow=True)
         self.assertRedirects(delete_response, '/', status_code=302, target_status_code=200, fetch_redirect_response=True)
 
@@ -171,7 +171,7 @@ class PostsDeleteView(TestCase):
         # login(self.client)
         User.objects.create_user('joe', 'bigdog@wwe.com', 'joepassword')
         self.client.login(username='joe', password='joepassword')
-        delete_url = f'/posts/{self.post.id}/delete/'
+        delete_url = f'/posts/{self.post.id}/delete'
         delete_response = self.client.post(delete_url)
         self.assertEqual(delete_response.status_code, 403)
 
