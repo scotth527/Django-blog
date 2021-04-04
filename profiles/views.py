@@ -15,10 +15,9 @@ from django.http import HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db import IntegrityError
 from profiles.utils.mixins import UserIsRequesteeMixin, UserIsRequesteeOrRequesterMixin
-from profiles.utils.utils import get_friendlist, get_friend_suggestions
+from profiles.utils.utils import get_friendlist, get_friend_suggestions, get_mutual_friends
 from haystack.query import SearchQuerySet
 import pdb
-
 
 def signup(request):
     '''
@@ -137,7 +136,11 @@ class FriendshipSuggestionIndexView(LoginRequiredMixin, generic.ListView):
     def get_queryset(self):
         """Return the user's friendlist. """
         user = self.request.user
-        return get_friend_suggestions(user)
+        suggestion_count = self.kwargs["suggestion_count"]
+        friend_suggestions = get_friend_suggestions(user, suggestion_count)
+        for friend in friend_suggestions:
+           friend.mutual_friends = get_mutual_friends(user, friend.user)
+        return friend_suggestions
 
     # TODO: Complete this friendship suggestion function
 

@@ -32,3 +32,12 @@ li.nav-item > a:hover, div.navbar-left-side > a:hover {
      cursor:pointer;
 }
 
+span {
+
+ display: inline-block;
+
+ vertical-align: middle;
+
+ line-height: normal;
+
+}

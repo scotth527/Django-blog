@@ -46,5 +46,16 @@ def get_friend_suggestions(user, suggestion_count = 5):
     # Get a list of users in the same city and same state and not already friend requested
     # If there is less than 5 remove the same city and same state
 
-    print("Friendship suggestions", friendship_suggestion_query)
     return friendship_suggestion_query
+
+def get_mutual_friends(user, target_user):
+    """
+    Function requires two users, it will return a queryset that contains which
+    :param user:
+    :param target_user:
+    :return:
+    """
+    user_friend_list = get_friendlist(user)
+    target_user_friend_list = get_friendlist(target_user)
+    mutual_friends = set(user_friend_list) & set(target_user_friend_list)
+    return mutual_friends

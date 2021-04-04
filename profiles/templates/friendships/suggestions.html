@@ -1,1 +1,30 @@
-{{ suggested_friendlist }}
+{% extends "base.html" %}
+{% block content %}
+
+<h3>Suggested Friends</h3>
+<div>
+    {% for profile in suggested_friendlist %}
+        <div class=" row d-flex align-items-center">
+            <div class="col-2 d-flex align-items-center  flex-column justify-content-start">
+                <h5 >{{ profile.user.username }}</h5>
+                <p>{{profile.city}}, {{profile.state}}</p>
+                <p>Mutual Friends: {{ profile.mutual_friends|length }} </p>
+                <div>
+                    <ul>
+                        {% for mutual in profile.mutual_friends %}
+                        <li>{{mutual.username}}</li>
+                        {% endfor %}
+                    </ul>
+
+                </div>
+            </div>
+
+            <div class="col-2">
+                {% include 'profiles/partials/_friendship_request_form.html' with id=profile.id %}
+            </div>
+        </div>
+
+    {% endfor %}
+</div>
+
+{% endblock %}
