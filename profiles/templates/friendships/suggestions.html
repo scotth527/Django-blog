@@ -9,14 +9,15 @@
                 <h5 >{{ profile.user.username }}</h5>
                 <p>{{profile.city}}, {{profile.state}}</p>
                 <p>Mutual Friends: {{ profile.mutual_friends|length }} </p>
+                {% if profile.mutual_friends %}
                 <div>
                     <ul>
                         {% for mutual in profile.mutual_friends %}
                         <li>{{mutual.username}}</li>
                         {% endfor %}
                     </ul>
-
                 </div>
+                {% endif %}
             </div>
 
             <div class="col-2">
