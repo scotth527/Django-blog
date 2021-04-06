@@ -46,14 +46,13 @@ def signup(request):
 
     return render(request, 'profiles/signup.html', {'form': form})
 
-class DetailView(LoginRequiredMixin, generic.DetailView):
-    # TODO: Rename this function to make it more clear that it is for profile detail
+class ProfileDetailView(LoginRequiredMixin, generic.DetailView):
     model = Profile
     template_name = 'profiles/detail.html'
     form_class = FriendshipUpdateForm
 
     def get_context_data(self, **kwargs):
-        context = super(DetailView, self).get_context_data(**kwargs)
+        context = super(ProfileDetailView, self).get_context_data(**kwargs)
         profile_belongs_to_user = self.request.user.id == self.kwargs["pk"]
         context['form'] = self.form_class if profile_belongs_to_user else None
         context['is_user_profile'] = profile_belongs_to_user
@@ -70,6 +69,11 @@ class DetailView(LoginRequiredMixin, generic.DetailView):
 
 
 def signin(request):
+    '''
+    Logs in the user and authenticates them
+    :param request:
+    :return:
+    '''
     form = AuthenticationForm()
     if request.method == 'POST':
         username = request.POST['username']
@@ -91,6 +95,11 @@ def signin(request):
 
 
 def logout_view(request):
+    '''
+    Logout the user function, redirects user to login page
+    :param request:
+    :return:
+    '''
     logout(request)
     return HttpResponseRedirect(reverse('profiles:login'))
     # Redirect to a success page.

@@ -14,7 +14,7 @@ urlpatterns = [
     # path('<str:keyword>/search', views.SearchUserIndexView.as_view(), name='user-search'),
     path('<int:requestee_id>/friend-request', views.request_friendship, name='friend-request'),
     path('<int:pk>/', include([
-        path('', views.DetailView.as_view(), name='detail'),
+        path('', views.ProfileDetailView.as_view(), name='detail'),
         path('friend-request-update', views.FriendshipUpdateView.as_view(), name='friend-request-update'),
         path('friend-list', views.FriendshipIndexView.as_view(), name='friend-list'),
         path('<int:suggestion_count>/friend-suggestion', views.FriendshipSuggestionIndexView.as_view(),

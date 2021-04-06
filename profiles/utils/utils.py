@@ -19,10 +19,11 @@ def get_friendlist(user):
 
     return friend_list
 
-def get_friend_suggestions(user, suggestion_count = 5):
+
+def get_friend_suggestions(user, suggestion_count=5):
     """
-        :param user: Must be an instance of the profile object
-        :return: A list of users that are in the same city that have not been friend requested.
+    :param user: Must be an instance of the profile object
+    :return: A list of users that are in the same city that have not been friend requested.
     """
     profile = user.profile
     profile_is_in_same_city = Q(city=profile.city)
@@ -35,18 +36,21 @@ def get_friend_suggestions(user, suggestion_count = 5):
     friend_list = [(friendship.requestee if friendship.requestee != user else friendship.requester) for friendship in
                    friendship_query]
 
-    friendship_suggestion_query = Profile.objects.exclude(user__in=friend_list).filter(profile_is_in_same_city & profile_is_in_same_state & is_not_user)[:5]
+    friendship_suggestion_query = Profile.objects.exclude(user__in=friend_list).filter(
+        profile_is_in_same_city & profile_is_in_same_state & is_not_user)[:5]
     friendship_suggestion_length = len(friendship_suggestion_query)
     if friendship_suggestion_length < suggestion_count:
         # Concatenate those in their same city/state with others not in their city up to 5
         remaining_suggestion_count = suggestion_count - friendship_suggestion_length
-        people_not_in_user_city = Profile.objects.exclude(user__in=friend_list).filter(is_not_user)[:remaining_suggestion_count]
+        people_not_in_user_city = Profile.objects.exclude(user__in=friend_list).filter(is_not_user)[
+                                  :remaining_suggestion_count]
         friendship_suggestion_query = friendship_suggestion_query | people_not_in_user_city
 
     # Get a list of users in the same city and same state and not already friend requested
     # If there is less than 5 remove the same city and same state
 
     return friendship_suggestion_query
+
 
 def get_mutual_friends(user, target_user):
     """
