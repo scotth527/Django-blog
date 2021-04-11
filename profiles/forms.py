@@ -22,10 +22,28 @@ class SignUpForm(UserCreationForm):
         model = User
         fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2', )
 
+    def __init__(self, *args, **kwargs):
+        super(SignUpForm, self).__init__(*args, **kwargs)
+        ## add a "form-control" class to each form input
+        ## for enabling bootstrap
+        for name in self.fields.keys():
+            self.fields[name].widget.attrs.update({
+                'class': 'form-control',
+            })
+
 class FriendshipRequestForm(forms.ModelForm):
     class Meta:
         model = Friendship
         fields = ('status',)
+
+    def __init__(self, *args, **kwargs):
+        super(FriendshipRequestForm, self).__init__(*args, **kwargs)
+        ## add a "form-control" class to each form input
+        ## for enabling bootstrap
+        for name in self.fields.keys():
+            self.fields[name].widget.attrs.update({
+                'class': 'form-control',
+            })
 
 class FriendshipUpdateForm(forms.ModelForm):
       status = forms.CharField(max_length=30, widget=forms.Select(choices=STATUS_CHOICES), required=True)
@@ -33,5 +51,14 @@ class FriendshipUpdateForm(forms.ModelForm):
       class Meta:
           model = Friendship
           fields = ('status',)
+
+      def __init__(self, *args, **kwargs):
+          super(FriendshipUpdateForm, self).__init__(*args, **kwargs)
+          ## add a "form-control" class to each form input
+          ## for enabling bootstrap
+          for name in self.fields.keys():
+              self.fields[name].widget.attrs.update({
+                  'class': 'form-control',
+              })
 
 

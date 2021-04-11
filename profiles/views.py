@@ -213,6 +213,6 @@ class SearchUserIndexView(LoginRequiredMixin, generic.ListView):
         return context
 
     def get_queryset(self):
-        """Return the user's friendlist. """
+        """Return the user's friendlist."""
         search_value = self.kwargs["pk"]
         return get_friendlist(user)
