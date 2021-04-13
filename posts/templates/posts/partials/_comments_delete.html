@@ -1,0 +1,7 @@
+<form method="post" action="/posts/{{id}}/{{type}}/reaction/">
+    {% csrf_token %}
+
+    <button  class="btn btn-danger"  type="submit">
+        Delete Comment
+    </button>
+</form>
