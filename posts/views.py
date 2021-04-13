@@ -184,12 +184,12 @@ def create_comment(request, post_id):
 
         return render(request, 'posts/index.html', {'form': form})
 
-    class CommentsDeleteView(LoginRequiredMixin, UserIsAuthorMixin, generic.DeleteView):
-        # specify the model you want to use
-        model = Comment
-        # can specify success url
-        # url to redirect after successfully
-        # deleting object
-        success_url = "/"
+class CommentsDeleteView(LoginRequiredMixin, UserIsAuthorMixin, generic.DeleteView):
+    # specify the model you want to use
+    model = Comment
+    # can specify success url
+    # url to redirect after successfully
+    # deleting object
+    success_url = "/"
 
-        # TODO: create the url and functionality for this path
+    # TODO: create the url and functionality for this path
