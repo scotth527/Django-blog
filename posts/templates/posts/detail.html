@@ -19,6 +19,14 @@
 
     {% include 'posts/partials/_toggle_reaction.html' with id=comment.id is_liked=comment.is_liked_by_user type="comment" reaction_count=comment.reactions.count %}
 
+    {% if comment.author == user %}
+
+    {% include 'posts/partials/_comments_delete.html' %}
+
+    {% endif %}
+
+
+
 </div>
 {% endfor %}
 

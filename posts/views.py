@@ -192,4 +192,4 @@ class CommentsDeleteView(LoginRequiredMixin, UserIsAuthorMixin, generic.DeleteVi
     # deleting object
     success_url = "/"
 
-    # TODO: create the url and functionality for this path
+    # TODO: functionality for this path
