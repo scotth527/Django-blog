@@ -112,12 +112,34 @@ class FriendshipUpdateView(TestCase):
     def test_that_friendship_request_can_be_updated_if_user_is_requestee(self):
         login(self.client)
         friendship_request_url = reverse('profiles:friend-request', kwargs={'requestee_id': self.user2.id})
-        friendrequest_response = self.client.post(friendship_request_url, {"status": "Pending"}, follow=True)
+        self.client.post(friendship_request_url, {"status": "Pending"}, follow=True)
         self.client.logout()
 
         friendrequest = Friendship.objects.get(requestee=self.user2, requester=self.user)
         self.client.login(username='billy', password='billypassword')
         friendship_update_request_url = reverse('profiles:friend-request-update', kwargs={'pk': friendrequest.id})
-        print("Friendship update", friendship_update_request_url)
         friendship_update = self.client.post(friendship_update_request_url, {"status":"Accept"}, follow=True)
         self.assertEquals(friendship_update.status_code, 200)
+
+class FriendshipDeleteView(TestCase):
+    def setUp(self):
+        self.client = Client()
+        create_user()
+        self.user = User.objects.get(email="youcantseeme@wwe.com")
+        self.user2 = User.objects.create_user('billy', 'billy@wwe.com', 'billypassword')
+        login(self.client)
+        friendship_request_url = reverse('profiles:friend-request', kwargs={'requestee_id': self.user2.id})
+        self.client.post(friendship_request_url, {"status": "Pending"}, follow=True)
+        self.friendrequest = Friendship.objects.get(requestee=self.user2, requester=self.user)
+        friendship_update_request_url = reverse('profiles:friend-request-update', kwargs={'pk': self.friendrequest.id})
+        self.client.post(friendship_update_request_url, {"status": "Accept"}, follow=True)
+        self.client.logout()
+
+    def test_friendship_delete_works_if_the_user_is_accepted_friend(self):
+        login(self.client)
+        friendship_delete_url = reverse('profiles:delete-friendship', kwargs={'pk': self.friendrequest.id})
+        friendship_delete_response = self.client.post(friendship_delete_url, follow=True)
+        self.assertEquals(friendship_delete_response.status_code, 200)
+        # friendship = Friendship.objects.get(requestee=self.user2, requester=self.user)
+        # print("Friendship deleted?", friendship)
+
