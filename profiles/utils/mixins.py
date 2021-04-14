@@ -4,6 +4,8 @@ class UserIsRequesteeMixin(UserPassesTestMixin):
     """Checks if the user of this function is the requestee. Only the requestee can respond to friendship request."""
     def test_func(self):
         obj = self.get_object()
+
+        print("User is requestee Mixin", "Requestee", obj.requestee, "User", self.request.user)
         return obj.requestee == self.request.user
 
 class UserIsRequesteeOrRequesterMixin(UserPassesTestMixin):

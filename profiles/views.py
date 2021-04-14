@@ -58,7 +58,7 @@ class ProfileDetailView(LoginRequiredMixin, generic.DetailView):
         context['is_user_profile'] = profile_belongs_to_user
         # pdb.set_trace()
         if context['is_user_profile']:
-            pending_friend_requests = Friendship.objects.filter(requester=self.request.user, status="Pending")
+            pending_friend_requests = Friendship.objects.filter(requestee=self.request.user, status="Pending")
             context['pending_friend_requests'] = pending_friend_requests
             print("Pending Friend Requests ", pending_friend_requests)
         return context
