@@ -1,3 +1,6 @@
+{% extends "base.html" %}
+{% block title %}Register - Microblog{% endblock %}
+{% block navbar %}{% endblock %}
 
 {% block content %}
 <h2>Sign up</h2>
@@ -15,7 +18,10 @@
     {% endfor %}
     </p>
     {% endfor %}
-    <button type="submit">Sign up</button>
-    <a href="{% url 'profiles:login' %}">Already a user</a>
+    <button class="btn btn-primary" type="submit">Sign up</button>
+    <p>
+         <a href="{% url 'profiles:login' %}">Already a user</a>
+    </p>
+
 </form>
 {% endblock %}
