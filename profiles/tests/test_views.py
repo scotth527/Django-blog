@@ -138,6 +138,7 @@ class FriendshipDeleteView(TestCase):
     def test_friendship_delete_works_if_the_user_is_accepted_friend(self):
         login(self.client)
         friendship_delete_url = reverse('profiles:delete-friendship', kwargs={'pk': self.friendrequest.id})
+        print("Friendship delete url", friendship_delete_url)
         friendship_delete_response = self.client.post(friendship_delete_url, follow=True)
         self.assertEquals(friendship_delete_response.status_code, 200)
         # friendship = Friendship.objects.get(requestee=self.user2, requester=self.user)
