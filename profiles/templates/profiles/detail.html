@@ -7,9 +7,15 @@
 {% if is_user_profile %}
 This is the current user's profile.
 {% for request in pending_friend_requests %}
+<<<<<<< HEAD
 {% include 'profiles/partials/_friendship_update_form.html' with id=request.id %}
 <div>Requested By: {{ request.requester.username }}</div>
 
+=======
+{{request.id}}
+{% include 'profiles/partials/_friendship_update_form.html' with id=request.id %}
+<div>User: {{ request.requestor.username }}</div>
+>>>>>>> a8e8c0244babf62b9b573b70d8f832a408639654
 {% endfor %}
 
 
