@@ -1,9 +1,10 @@
-<form method="post" action="/posts/{{id}}/{{type}}/reaction/">
+<div class="me-3">
+    <form method="post" action="/posts/{{id}}/{{type}}/reaction/" >
     {% csrf_token %}
     <div>Like Count: {{reaction_count | default_if_none:"0" }} </div>
     <input type="hidden" name="reaction" value="U+1F44D" />
 
-    <button  class="btn btn-{% if is_liked > 0 %}primary{% else %}secondary{% endif %}"  type="submit">
+    <button  class="mt-2 btn btn-{% if is_liked > 0 %}primary{% else %}secondary{% endif %}"  type="submit">
         {% if is_liked > 0 %}
         Unlike
         {% else %}
@@ -11,3 +12,4 @@
         {% endif %}
     </button>
 </form>
+</div>
