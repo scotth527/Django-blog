@@ -2,6 +2,10 @@ div, p {
     color: red;
 }
 
+select.form-control {
+    display:inline;
+}
+
 /* The Modal (background) */
 .modal {
   display: none; /* Hidden by default */
