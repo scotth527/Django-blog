@@ -3,7 +3,7 @@
 
     {% for field in form %}
 <!--        {{ field.label_tag }}-->
-    <p class="{% ifequal field.label_tag 'Publish Date:' %} d-flex {% endifequal %}">
+    <p class="{% if field.label_tag == 'Publish Date:' %} d-flex {% endif %}">
         {{ field.label_tag }}<br>
         {{ field }}
         {% if field.help_text %}

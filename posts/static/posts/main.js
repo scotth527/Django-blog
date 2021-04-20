@@ -1,3 +1,5 @@
+alert("Say hi to your brother!")
+
 // Get the modal
 var modal = document.getElementById("myModal");
 
