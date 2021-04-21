@@ -4,7 +4,7 @@ from .models import Post, Reaction, Comment
 class PostsForm(forms.ModelForm):
     post_title = forms.CharField(label='Title', max_length=100, required=True)
     post_body = forms.CharField(label='Body', widget=forms.Textarea, required=True)
-    pub_date = forms.DateField(label='Publish Date', widget=forms.SelectDateWidget())
+    pub_date = forms.DateField(label='Publish Date', widget=forms.SelectDateWidget(attrs={'class': "d-inline"}))
 
     class Meta:
             model = Post
