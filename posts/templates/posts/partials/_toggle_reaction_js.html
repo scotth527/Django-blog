@@ -1,6 +1,6 @@
 <script>
 
-    let reaction_forms = document.getElementsByClassName('reaction__form');
+    let reaction_forms = $('.reaction__form');
     let reaction_buttons = document.getElementsByClassName('reaction__button');
 
     // Used to update the styling of the reaction button
@@ -18,12 +18,10 @@
 
 
     let toggleLike = (e, id, type) => {
-        e.preventDefault();
-        let currentCount = parseInt(e.target.dataset.reactionCount);
 
-        console.log("Id", id, "Current Count" , currentCount, "type", type);
+        console.log("Id", id, "type", type);
 
-        let serializedData = $(this).serialize();
+        let serializedData = $(e).serialize();
         console.log("Serialized data", serializedData);
 
         //Check button's current status
@@ -31,12 +29,15 @@
 
         console.log("Text content", currentLikeStatus);
 
-        //API request
         $.ajax({
             type: 'POST',
             url:  `{% url 'posts:toggle-reaction' object_id=9998 object_type=9999 %}`.replace(9998, id).replace(9999, type),
             data: serializedData,
             success: function (response) {
+
+                let updated_count = JSON.parse(response['object_reaction_count']);
+                updateLikeCount(id, updated_count);
+                updateReactionButtonStyle(id);
 
             },
             error: function (response) {
@@ -45,14 +46,20 @@
             }
         })
 
+
         //Depending on what they change it to increment or decrement the count
     }
 
-    //Assign the onclick
-    for (var i = 0; i < reaction_forms.length; i++) {
-       let reaction_id = parseInt(reaction_forms[i].dataset.reactionId);
-       let post_type = reaction_forms[i].dataset.postType;
-       reaction_forms[i].onsubmit = (e)=>{ toggleLike(e, reaction_id, post_type) }
-    }
+
+<!--    Assign the on submits -->
+    reaction_forms.each((i, form)=>{
+        console.log("Form", form);
+        let reaction_id = $(form).data('reactionId');
+        let post_type = $(form).data('postType');
+        $(form).submit((e)=> {
+            e.preventDefault();
+            toggleLike(form, reaction_id, post_type);
+        });
+    });
 
 </script>

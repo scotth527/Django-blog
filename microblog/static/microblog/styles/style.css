@@ -33,9 +33,16 @@ li.nav-item > a:hover, div.navbar-left-side > a:hover {
 span {
 
  display: inline-block;
-
- vertical-align: middle;
-
  line-height: normal;
 
+}
+
+/** TODO: Fix footer to the bottom of the page **/
+footer {
+    position:relative;
+    bottom:0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }

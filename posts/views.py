@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.http import HttpResponse, HttpResponseRedirect, Http404, JsonResponse
 from django.template import loader
 from django.urls import reverse
 from django.utils import timezone
@@ -114,7 +114,7 @@ def toggle_reaction(request, object_id, object_type):
     user_reaction = object.reactions.filter(user=user)
     user_has_reacted_to_object = user_reaction.count() > 0
 
-    if request.method == 'POST' and object:
+    if request.method == 'POST' and object and request.is_ajax:
         form = ReactionsForm(request.POST)
         # pdb.set_trace()
         if form.is_valid() and not user_has_reacted_to_object:
@@ -127,9 +127,12 @@ def toggle_reaction(request, object_id, object_type):
         elif user_has_reacted_to_object:
             user_reaction.delete()
 
-        return redirect(request.META.get('HTTP_REFERER', 'posts:index'))
+        updated_count = object.reactions.count()
+        print("Updated counts", updated_count)
+        return JsonResponse({"object_reaction_count": updated_count}, status=200)
     else:
-        print("Object was NONE")
+        print("Request.method", request.method, object)
+        return JsonResponse({"error": ""}, status=400)
 
 
 @login_required

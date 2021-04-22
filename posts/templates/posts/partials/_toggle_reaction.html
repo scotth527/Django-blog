@@ -3,6 +3,7 @@
       id="reaction_{{id}}"
       data-reaction-id="{{id}}"
       data-post-type="{{type}}"
+      method="POST"
       action={% url 'posts:toggle-reaction' object_id=id object_type=type %}
       data-reaction-count="{{reaction_count | default_if_none:'0' }}" >
 

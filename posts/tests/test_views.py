@@ -75,7 +75,7 @@ class PostsDetailView(TestCase):
         reaction_url = f'/posts/{post.id}/post/reaction/'
         add_reaction = self.client.post(reaction_url, {"reaction":"U+1F44D"})
         # pdb.set_trace()
-        self.assertRedirects(add_reaction, self.index_url)
+        self.assertEqual(add_reaction.status_code, 200)
         self.assertEqual(post.reactions.filter(user=self.user).count(), 1)
 
     def test_that_if_post_has_a_reaction_by_the_user_already_that_it_will_be_removed(self):

@@ -2,14 +2,14 @@
 {% load static %}
 
 {% block head %}
-<link rel="stylesheet" type="text/css" href="{% static 'posts/style.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'posts/styles/style.css' %}">
 {% endblock %}
 
 {% block content %}
 <div class="post col-6 mx-auto">
     <h1>Blog Feed</h1>
 
-    <section class="mx-auto">
+    <section class="mx-auto border border-dark rounded p-4">
         {% include 'posts/partials/_posts_new.html' with form=form %}
     </section>
 

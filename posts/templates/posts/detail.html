@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block content %}
 <div class=" border-bottom pb-5">
     <h1>{{ post.post_title }}</h1>
@@ -44,4 +44,8 @@
 </div>
 {% endfor %}
 
+{% endblock %}
+{% block js_block %}
+    <script src="{% static 'posts/js/main.js' %}"></script>
+    {% include 'posts/partials/_toggle_reaction_js.html' %}
 {% endblock %}

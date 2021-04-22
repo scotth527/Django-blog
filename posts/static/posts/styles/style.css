@@ -9,15 +9,12 @@ select.form-control {
 
 select[id$="_day"].form-control {
     width: 27%;
-    color: red;
 }
 select[id$="_month"].form-control {
     width: 38%;
-    color: green;
 }
 select[id$="_year"].form-control {
     width: 35%;
-    color: blue;
 }
 
 select[name$="_day".form-control {
