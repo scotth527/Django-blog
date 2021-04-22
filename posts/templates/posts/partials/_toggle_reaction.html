@@ -1,10 +1,20 @@
-<div class="me-3">
-    <form method="post" action="/posts/{{id}}/{{type}}/reaction/" >
+
+<form class="reaction__form me-3"
+      id="reaction_{{id}}"
+      data-reaction-id="{{id}}"
+      data-post-type="{{type}}"
+      action={% url 'posts:toggle-reaction' object_id=id object_type=type %}
+      data-reaction-count="{{reaction_count | default_if_none:'0' }}" >
+
+<!--            method="post" action="/posts/{{id}}/{{type}}/reaction/"-->
+
     {% csrf_token %}
-    <div>Like Count: {{reaction_count | default_if_none:"0" }} </div>
+        <div >Like Count: <span id="reaction__count__{{id}}">{{reaction_count | default_if_none:"0" }}</span></div>
     <input type="hidden" name="reaction" value="U+1F44D" />
 
-    <button  class="mt-2 btn btn-{% if is_liked > 0 %}primary{% else %}secondary{% endif %}"  type="submit">
+    <button type="submit"
+           id="reaction__button__{{id}}"
+           class="reaction__button mt-2 btn btn-{% if is_liked > 0 %}primary{% else %}secondary{% endif %}" >
         {% if is_liked > 0 %}
         Unlike
         {% else %}
@@ -12,4 +22,4 @@
         {% endif %}
     </button>
 </form>
-</div>
+

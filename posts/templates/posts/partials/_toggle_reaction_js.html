@@ -1,0 +1,58 @@
+<script>
+
+    let reaction_forms = document.getElementsByClassName('reaction__form');
+    let reaction_buttons = document.getElementsByClassName('reaction__button');
+
+    // Used to update the styling of the reaction button
+    let updateReactionButtonStyle = (id)=> {
+        let button = $(`#reaction__button__${id}`);
+        button.toggleClass("btn-secondary btn-primary");
+
+        button.text() === "Like" ? button.text("Unlike") :  button.text("Like");
+    }
+
+    let updateLikeCount = (id, updatedCount)=> {
+        let like_count_div = $(`#reaction__count__${id}`);
+        like_count_div.text(`${updatedCount}`)
+    }
+
+
+    let toggleLike = (e, id, type) => {
+        e.preventDefault();
+        let currentCount = parseInt(e.target.dataset.reactionCount);
+
+        console.log("Id", id, "Current Count" , currentCount, "type", type);
+
+        let serializedData = $(this).serialize();
+        console.log("Serialized data", serializedData);
+
+        //Check button's current status
+        let currentLikeStatus = document.getElementById(`reaction__button__${id}`).textContent == "Like";
+
+        console.log("Text content", currentLikeStatus);
+
+        //API request
+        $.ajax({
+            type: 'POST',
+            url:  `{% url 'posts:toggle-reaction' object_id=9998 object_type=9999 %}`.replace(9998, id).replace(9999, type),
+            data: serializedData,
+            success: function (response) {
+
+            },
+            error: function (response) {
+                // alert the error if any error occured
+                alert(response["responseJSON"]["error"]);
+            }
+        })
+
+        //Depending on what they change it to increment or decrement the count
+    }
+
+    //Assign the onclick
+    for (var i = 0; i < reaction_forms.length; i++) {
+       let reaction_id = parseInt(reaction_forms[i].dataset.reactionId);
+       let post_type = reaction_forms[i].dataset.postType;
+       reaction_forms[i].onsubmit = (e)=>{ toggleLike(e, reaction_id, post_type) }
+    }
+
+</script>

@@ -45,7 +45,9 @@ class PostsIndexView(LoginRequiredMixin, generic.ListView ):
         non_future_post = Q(pub_date__lte=timezone.now())
         post_belongs_to_user = Q(author=user)
         post_belongs_to_friend = Q(author__in=friend_list)
-        current_posts = Post.objects.filter( non_future_post & (post_belongs_to_user | post_belongs_to_friend)).order_by('-pub_date')[:10]
+        current_posts = Post.objects.filter(non_future_post & (post_belongs_to_user | post_belongs_to_friend)).order_by('-pub_date')[:10]
+
+        # TODO: Allow user to fetch more posts if desired
 
         for post in current_posts:
             post.is_liked_by_user = check_existing_dictionary_in_list(post.reactions.all(), "user", user)
