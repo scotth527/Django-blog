@@ -7,7 +7,7 @@
 {% if accepted_friendlist %}
     {% for friendship in accepted_friendlist %}
 
-    <p>Username: {{friendship.username}}</p>
+    <p>Username: <a href="{% url 'profiles:detail' friendship.id %}">{{friendship.username}}</a></p>
     <p>Email: {{friendship.email}}</p>
     <p>Friendship ID {{friendship.friendship_id}}</p>
 

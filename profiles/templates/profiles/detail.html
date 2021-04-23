@@ -17,13 +17,17 @@ This is the current user's profile.
 <a href="{% url 'profiles:friend-list' profile.id %}">Friends</a>
 
 {% endif %}
+
 {% if profile.user != user %}
 {% include 'profiles/partials/_friendship_request_form.html' with id=profile.user.id %}
 {% endif %}
+
 <!--Action is what should happen after submit -->
 <div>
     <p>{{profile.first_name}}</p>
     <p>{{profile.last_name}}</p>
     <p>{{profile.user.email}}</p>
 </div>
+
+<!--TODO: Include their most recent posts-->
 {% endblock %}
