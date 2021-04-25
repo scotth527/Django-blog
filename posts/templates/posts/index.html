@@ -12,26 +12,14 @@
         {% include 'posts/partials/_posts_new.html' with form=form %}
     </section>
 
-
-
     <section class="mt-3">
     {% if latest_post_list %}
 
-    {% for post in latest_post_list %}
-<!--        TODO: Extract this into a partial-->
-        <article class="mb-5 border border-dark rounded p-4">
+        {% for post in latest_post_list %}
 
-        <h4><a href="{% url 'posts:detail' post.id %}">{{ post.post_title }}</a></h4>
-        <p>By: <a href="{% url 'profiles:detail' post.author.id %}">{{post.author.username}}</a></p>
-        <p>{{post.post_body}}</p>
+            {% include 'posts/partials/_post_article.html' with post=post comment_form=comment_form %}
 
-        {% include 'posts/partials/_toggle_reaction.html' with id=post.id is_liked=post.is_liked_by_user type="post" reaction_count=post.reactions.count %}
-
-        {% include 'posts/partials/_comments_new.html' with id=post.id form=comment_form %}
-
-        </article>
-
-    {% endfor %}
+        {% endfor %}
 
     {% else %}
         <p>No posts are available.</p>

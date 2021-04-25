@@ -34,11 +34,8 @@
         <p>{{profile.user.email}}</p>
     </div>
 
-    <!--TODO: Include their most recent posts-->
     {% for post in posts %}
-
-
-
+        {% include 'posts/partials/_post_article.html' with post=post comment_form=comment_form %}
     {% endfor %}
 </div>
 {% endblock %}
