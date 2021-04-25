@@ -18,8 +18,12 @@ This is the current user's profile.
 
 {% endif %}
 
-{% if profile.user != user %}
-{% include 'profiles/partials/_friendship_request_form.html' with id=profile.user.id %}
+<!--TODO: amend this to also be if user has not already requested friendship with this user-->
+{% if profile.user != user and not is_friend_of_user %}
+    {% include 'profiles/partials/_friendship_request_form.html' with id=profile.user.id %}
+{% else %}
+<!--TODO: Insert friendship id -->
+    {% include 'friendships/partials/_friendship_delete_form.html' with id=profile.user.id %}
 {% endif %}
 
 <!--Action is what should happen after submit -->
@@ -30,4 +34,9 @@ This is the current user's profile.
 </div>
 
 <!--TODO: Include their most recent posts-->
+{% for post in posts %}
+
+
+
+{% endfor %}
 {% endblock %}

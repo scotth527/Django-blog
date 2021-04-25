@@ -18,6 +18,7 @@
     {% if latest_post_list %}
 
     {% for post in latest_post_list %}
+<!--        TODO: Extract this into a partial-->
         <article class="mb-5 border border-dark rounded p-4">
 
         <h4><a href="{% url 'posts:detail' post.id %}">{{ post.post_title }}</a></h4>
