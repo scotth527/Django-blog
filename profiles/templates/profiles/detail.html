@@ -1,42 +1,44 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>{{ profile.user.username }}</h1>
+<div class="container">
+    <h1>{{ profile.user.username }}</h1>
 
-{% if error_message %}<p><strong>{{error_message}}</strong></p>{% endif %}
+    {% if error_message %}<p><strong>{{error_message}}</strong></p>{% endif %}
 
-{% if is_user_profile %}
-This is the current user's profile.
-{% for request in pending_friend_requests %}
+    {% if is_user_profile %}
+    This is the current user's profile.
+    {% for request in pending_friend_requests %}
 
-{% include 'profiles/partials/_friendship_update_form.html' with id=request.id %}
-<div>Requested By: {{ request.requester.username }}</div>
+    {% include 'profiles/partials/_friendship_update_form.html' with id=request.id %}
+    <div>Requested By: {{ request.requester.username }}</div>
 
-{% endfor %}
+    {% endfor %}
 
 
-<a href="{% url 'profiles:friend-list' profile.id %}">Friends</a>
+    <a href="{% url 'profiles:friend-list' profile.id %}">Friends</a>
 
-{% endif %}
+    {% endif %}
 
-<!--TODO: amend this to also be if user has not already requested friendship with this user-->
-{% if profile.user != user and not is_friend_of_user %}
-    {% include 'profiles/partials/_friendship_request_form.html' with id=profile.user.id %}
-{% else %}
-<!--TODO: Insert friendship id -->
-    {% include 'friendships/partials/_friendship_delete_form.html' with id=profile.user.id %}
-{% endif %}
+    <!--TODO: amend this to also be if user has not already requested friendship with this user-->
+    {% if profile.user != user and not is_friend_of_user %}
+        {% include 'profiles/partials/_friendship_request_form.html' with id=profile.user.id %}
+    {% else %}
+    <!--TODO: Insert friendship id -->
+        {% include 'friendships/partials/_friendship_delete_form.html' with id=profile.user.id %}
+    {% endif %}
 
-<!--Action is what should happen after submit -->
-<div>
-    <p>{{profile.first_name}}</p>
-    <p>{{profile.last_name}}</p>
-    <p>{{profile.user.email}}</p>
+    <!--Action is what should happen after submit -->
+    <div>
+        <p>{{profile.first_name}}</p>
+        <p>{{profile.last_name}}</p>
+        <p>{{profile.user.email}}</p>
+    </div>
+
+    <!--TODO: Include their most recent posts-->
+    {% for post in posts %}
+
+
+
+    {% endfor %}
 </div>
-
-<!--TODO: Include their most recent posts-->
-{% for post in posts %}
-
-
-
-{% endfor %}
 {% endblock %}

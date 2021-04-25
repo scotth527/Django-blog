@@ -1,3 +1,7 @@
+:root {
+
+}
+
 nav.navbar {
     padding-left: 20px;
     padding-right: 20px;
@@ -9,10 +13,6 @@ ul.navbar-nav > li {
 
 ul.navbar-nav > li:last-child {
     margin-right: 0;
-}
-
-p {
-    color: red;
 }
 
 h1 {
@@ -31,18 +31,19 @@ li.nav-item > a:hover, div.navbar-left-side > a:hover {
 }
 
 span {
-
  display: inline-block;
  line-height: normal;
-
 }
 
-/** TODO: Fix footer to the bottom of the page **/
 footer {
-    position:relative;
-    bottom:0;
-    left: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+   width: 100%;
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
 }
+
+div#page-container {
+    position: relative;
+    min-height: 100vh;
+}
+

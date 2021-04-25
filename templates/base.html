@@ -14,64 +14,67 @@
 
 <body>
 <!--TODO: Separate this nav into a partial -->
+    <div id="page-container" class="d-flex flex-column justify-content-between">
+<!--This div wrapping the nav and main is meant to prevent the main from being positioned in the center-->
+    <div>
+        {% block navbar %}
+        <nav class="navbar navbar-expand-lg navbar-light bg-light d-flex justify-content-between">
+          <div class="navbar-left-side d-flex align-items-center">
+            <a href="{% url 'posts:index' %}">Home</a>
+          </div>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                  aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
 
-{% block navbar %}
-<nav class="navbar navbar-expand-lg navbar-light bg-light d-flex justify-content-between">
-  <div class="navbar-left-side d-flex align-items-center">
-    <a href="{% url 'posts:index' %}">Home</a>
-  </div>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+          <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto align-items-center d-flex justify-content-end">
+              <li class="nav-item active">
+                   <a href="{% url 'profiles:detail' user.id %}">Profile</a>
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'profiles:logout' %}">Logout</a>
+              </li>
+                <li class="nav-item">
+                <a href="{% url 'profiles:friend-suggestion' pk=user.id suggestion_count=10 %}">Find Friends</a>
+              </li>
+              <li>
+                <form class="form-inline my-2 my-lg-0 d-flex">
+                  <input class="form-control mr-sm-2" type="search" placeholder="Search user" aria-label="Search">
+                  <button class="btn btn-dark my-2 my-sm-0" type="submit">Search</button>
+                </form>
+              </li>
+            </ul>
 
-  <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto align-items-center d-flex justify-content-end">
-      <li class="nav-item active">
-           <a href="{% url 'profiles:detail' user.id %}">Profile</a>
-      </li>
-      <li class="nav-item">
-        <a href="{% url 'profiles:logout' %}">Logout</a>
-      </li>
-        <li class="nav-item">
-        <a href="{% url 'profiles:friend-suggestion' pk=user.id suggestion_count=10 %}">Find Friends</a>
-      </li>
-      <li>
-        <form class="form-inline my-2 my-lg-0 d-flex">
-          <input class="form-control mr-sm-2" type="search" placeholder="Search user" aria-label="Search">
-          <button class="btn btn-dark my-2 my-sm-0" type="submit">Search</button>
-        </form>
-      </li>
-    </ul>
+          </div>
+        </nav>
+            {% if messages %}
+            <ul class="messages p-0">
+                {% for message in messages %}
 
-  </div>
-</nav>
-    {% if messages %}
-    <ul class="messages p-0">
-        {% for message in messages %}
+                <div {% if message.tags %} class=" alert alert-{{ message.tags }}" {% endif %} role="alert">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </ul>
+            {% endif %}
 
-        <div {% if message.tags %} class=" alert alert-{{ message.tags }}" {% endif %} role="alert">
-            {{ message }}
-        </div>
-        {% endfor %}
-    </ul>
-    {% endif %}
+        {% endblock %}
 
-{% endblock %}
+        <main class="container d-flex flex-column p-4">
+          {% block content %} {% endblock content %}
+        </main>
+    </div>
 
-<main class="container d-flex flex-column p-4">
-  {% block content %} {% endblock content %}
-</main>
+    {% block footer %}
+    <footer class="text-center bg bg-secondary p-3">
 
-{% block footer %}
-<footer class="text-center bg bg-secondary p-3">
-
-    <p class="text-light">Company Title ® 2020. All Rights Reserved.</p>
-    <p class="text-light">Website Design by SHuang | Sitemap | Private Policy
-</p>
-</footer>
-{% endblock %}
-
+        <p class="text-light">Company Title ® 2020. All Rights Reserved.</p>
+        <p class="text-light">Website Design by SHuang | Sitemap | Private Policy
+    </p>
+    </footer>
+    {% endblock %}
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.6.0/dist/umd/popper.min.js"
         integrity="sha384-KsvD1yqQ1/1+IA7gi3P0tyJcT3vR+NdBTt13hSJ2lnve8agRGXTTyNaBYmCR/Nwi"
