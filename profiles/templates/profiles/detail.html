@@ -14,28 +14,35 @@
 
     {% endfor %}
 
-
     <a href="{% url 'profiles:friend-list' profile.id %}">Friends</a>
+    <p>Friend Count: {{ friend_list|length }}</p>
 
     {% endif %}
 
     <!--TODO: amend this to also be if user has not already requested friendship with this user-->
-    {% if profile.user != user and not is_friend_of_user %}
-        {% include 'profiles/partials/_friendship_request_form.html' with id=profile.user.id %}
-    {% else %}
+    {% if is_friend_of_user %}
     <!--TODO: Insert friendship id -->
         {% include 'friendships/partials/_friendship_delete_form.html' with id=profile.user.id %}
+    {% elif profile.user != user and not is_friend_of_user %}
+        {% include 'profiles/partials/_friendship_request_form.html' with id=profile.user.id %}
+
     {% endif %}
+
+    <button class="btn btn-secondary disabled">Pending Friend Request</button>
 
     <!--Action is what should happen after submit -->
     <div>
-        <p>{{profile.first_name}}</p>
-        <p>{{profile.last_name}}</p>
+        <p>{{profile.first_name }} {{profile.last_name}}</p>
         <p>{{profile.user.email}}</p>
     </div>
 
+    <h2>Recent Posts</h2>
     {% for post in posts %}
         {% include 'posts/partials/_post_article.html' with post=post comment_form=comment_form %}
     {% endfor %}
 </div>
+{% endblock %}
+
+{% block js_block %}
+    {% include 'posts/partials/_toggle_reaction_js.html' %}
 {% endblock %}

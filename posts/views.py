@@ -26,6 +26,7 @@ class PostsIndexView(LoginRequiredMixin, generic.ListView ):
     template_name = 'posts/index.html'
     context_object_name = 'latest_post_list'
     form_class = PostsForm
+    paginate_by = 10
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get the context

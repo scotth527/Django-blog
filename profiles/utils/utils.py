@@ -63,3 +63,12 @@ def get_mutual_friends(user, target_user):
     target_user_friend_list = get_friendlist(target_user)
     mutual_friends = set(user_friend_list) & set(target_user_friend_list)
     return mutual_friends
+
+
+def check_friendship_status(user, target_user):
+    user_is_requester = Q(requester=user)
+    user_is_requestee = Q(requestee=user)
+    target_user_is_requester = Q(requester=target_user)
+    target_user_is_requestee = Q(requestee=target_user)
+    return Friendship.objects.filter(
+        (user_is_requester & target_user_is_requestee) | (user_is_requestee & target_user_is_requester))

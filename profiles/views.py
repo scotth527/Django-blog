@@ -17,7 +17,7 @@ from django.http import HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db import IntegrityError
 from profiles.utils.mixins import UserIsRequesteeMixin, UserIsRequesteeOrRequesterMixin
-from profiles.utils.utils import get_friendlist, get_friend_suggestions, get_mutual_friends
+from profiles.utils.utils import get_friendlist, get_friend_suggestions, get_mutual_friends, check_friendship_status
 from haystack.query import SearchQuerySet
 import pdb
 
@@ -93,21 +93,25 @@ class ProfileDetailView(LoginRequiredMixin, generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super(ProfileDetailView, self).get_context_data(**kwargs)
         profile = self.get_object()
-        profile_belongs_to_user = self.request.user.id == self.kwargs["pk"]
+        user = self.request.user
+        profile_belongs_to_user = user.id == self.kwargs["pk"]
+        user_friendlist = get_friendlist(self.request.user)
+
         context['form'] = self.form_class if profile_belongs_to_user else None
         context['comment_form'] = CommentsForm
         context['is_user_profile'] = profile_belongs_to_user
         context['posts'] = Post.objects.filter(author=profile.user).order_by('-pub_date')[:10]
-
+        context['friend_list'] = user_friendlist
         # pdb.set_trace()
         if context['is_user_profile']:
             pending_friend_requests = Friendship.objects.filter(requestee=self.request.user, status="Pending")
             context['pending_friend_requests'] = pending_friend_requests
-            print("Pending Friend Requests ", pending_friend_requests)
         else:
-            user_friendlist = get_friendlist(self.request.user)
             profile = self.get_object().user
             context['is_friend_of_user'] = profile in user_friendlist
+            friendship_status = check_friendship_status(user, profile)
+            print("Friendship status", vars(friendship_status))
+
         return context
 
     def get_queryset(self):

@@ -13,41 +13,14 @@
 </head>
 
 <body>
-<!--TODO: Separate this nav into a partial -->
+
     <div id="page-container" class="d-flex flex-column justify-content-between">
-<!--This div wrapping the nav and main is meant to prevent the main from being positioned in the center-->
+ {% comment "This div wrapping the nav and main is meant to prevent the main from being positioned in the center" %}{% endcomment %}
     <div>
         {% block navbar %}
-        <nav class="navbar navbar-expand-lg navbar-light bg-light d-flex justify-content-between">
-          <div class="navbar-left-side d-flex align-items-center">
-            <a href="{% url 'posts:index' %}">Home</a>
-          </div>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                  aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
+            {% include 'partials/_navbar.html' %}
+        {% endblock %}
 
-          <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto align-items-center d-flex justify-content-end">
-              <li class="nav-item active">
-                   <a href="{% url 'profiles:detail' user.id %}">Profile</a>
-              </li>
-              <li class="nav-item">
-                <a href="{% url 'profiles:logout' %}">Logout</a>
-              </li>
-                <li class="nav-item">
-                <a href="{% url 'profiles:friend-suggestion' pk=user.id suggestion_count=10 %}">Find Friends</a>
-              </li>
-              <li>
-                <form class="form-inline my-2 my-lg-0 d-flex">
-                  <input class="form-control mr-sm-2" type="search" placeholder="Search user" aria-label="Search">
-                  <button class="btn btn-dark my-2 my-sm-0" type="submit">Search</button>
-                </form>
-              </li>
-            </ul>
-
-          </div>
-        </nav>
             {% if messages %}
             <ul class="messages p-0">
                 {% for message in messages %}
@@ -59,7 +32,7 @@
             </ul>
             {% endif %}
 
-        {% endblock %}
+
 
         <main class="container d-flex flex-column p-4">
           {% block content %} {% endblock content %}
@@ -86,7 +59,7 @@
 <script src="https://kit.fontawesome.com/85f280929d.js" crossorigin="anonymous"></script>
 
 {% block js_block %}
-<script src="{% static 'microblog/main.js' %}"></script>
+    <script src="{% static 'microblog/main.js' %}"></script>
 {% endblock %}
 
 </body>
