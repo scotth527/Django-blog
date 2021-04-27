@@ -4,12 +4,14 @@
 <h3>Suggested Friends</h3>
 <div>
 
-<!--    Do an if if there are not any suggested friends available -->
+ {% comment "Do an if if there are not any suggested friends available" %}{% endcomment %}
 
     {% for profile in suggested_friendlist %}
         <div class=" row d-flex align-items-center">
             <div class="col-2 d-flex align-items-center  flex-column justify-content-start">
-                <h5 >{{ profile.user.username }}</h5>
+
+                {% comment "TODO: Fix index error" %}{% endcomment %}
+                <a href="{% url 'profiles:detail' profile.id  %}"><h5 >{{ profile.user.username }}</h5></a>
                 <p>{{profile.city}}, {{profile.state}}</p>
                 <p>Mutual Friends: {{ profile.mutual_friends|length }} </p>
                 {% if profile.mutual_friends %}

@@ -108,9 +108,9 @@ class ProfileDetailView(LoginRequiredMixin, generic.DetailView):
             context['pending_friend_requests'] = pending_friend_requests
         else:
             profile = self.get_object().user
-            context['is_friend_of_user'] = profile in user_friendlist
-            friendship_status = check_friendship_status(user, profile)
-            print("Friendship status", vars(friendship_status))
+            # context['is_friend_of_user'] = profile in user_friendlist
+            context['friendship_status'] = check_friendship_status(user, profile)
+            print("Friendship status", vars(context['friendship_status']))
 
         return context
 
