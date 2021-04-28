@@ -19,19 +19,17 @@
 
     {% endif %}
 
-    {% if friendship_status|length > 0 and profile.user != user %}
-    <!--TODO: amend this to also be if user has not already requested friendship with this user-->
-        {% with friendship_status=friendship_status.0 %}
-        {% if friendship_status.status == "Accept" %}
-            {% include 'friendships/partials/_friendship_delete_form.html' with id=friendship_status.id %}
-        {% elif friendship_status.status == "Pending" %}
-                <button class="btn btn-secondary disabled">Pending Friend Request</button>
+    {% if friendship_status|length > 0 and not is_user_profile %}
+        {% with friendship_status=friendship_status.0 status=friendship_status.0.status %}
+        {% if status == "Accept" %}
+        {% include 'friendships/partials/_friendship_delete_form.html' with id=friendship_status.id %}
+        {% elif status == "Pending" %}
+        <button class="btn btn-secondary disabled">Pending Friend Request</button>
         {% endif %}
-    {% else  %}
-        {% include 'profiles/partials/_friendship_request_form.html' with id=profile.user.id %}
+        {% endwith %}
+    {% elif not is_user_profile %}
+    {% include 'profiles/partials/_friendship_request_form.html' with id=profile.user.id %}
     {% endif %}
-
-
 
     <!--Action is what should happen after submit -->
     <div>
@@ -41,11 +39,11 @@
 
     <h2>Recent Posts</h2>
     {% for post in posts %}
-        {% include 'posts/partials/_post_article.html' with post=post comment_form=comment_form %}
+    {% include 'posts/partials/_post_article.html' with post=post comment_form=comment_form %}
     {% endfor %}
 </div>
 {% endblock %}
 
 {% block js_block %}
-    {% include 'posts/partials/_toggle_reaction_js.html' %}
+{% include 'posts/partials/_toggle_reaction_js.html' %}
 {% endblock %}
