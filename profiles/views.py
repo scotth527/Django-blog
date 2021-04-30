@@ -99,6 +99,7 @@ class ProfileDetailView(LoginRequiredMixin, generic.DetailView):
 
         context['form'] = self.form_class if profile_belongs_to_user else None
         context['comment_form'] = CommentsForm
+        context['friendship_update_form'] = FriendshipUpdateForm
         context['is_user_profile'] = profile_belongs_to_user
         context['posts'] = Post.objects.filter(author=profile.user).order_by('-pub_date')[:10]
         context['friend_list'] = user_friendlist

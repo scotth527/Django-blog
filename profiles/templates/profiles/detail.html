@@ -21,17 +21,22 @@
 
     {% if friendship_status|length > 0 and not is_user_profile %}
         {% with friendship_status=friendship_status.0 status=friendship_status.0.status %}
+
+        {{ friendship_status.requester }} {{ user }}
         {% if status == "Accept" %}
         {% include 'friendships/partials/_friendship_delete_form.html' with id=friendship_status.id %}
         {% elif status == "Pending" %}
-        <button class="btn btn-secondary disabled">Pending Friend Request</button>
+            {% if user.username == friendship_status.requester.username %}
+                <button class="btn btn-secondary disabled">Pending Friend Request</button>
+            {% elif user.username == friendship_status.requestee.username %}
+                {% include 'profiles/partials/_friendship_update_form.html' with id=friendship_status.id form=friendship_update_form %}
+            {% endif %}
         {% endif %}
         {% endwith %}
     {% elif not is_user_profile %}
     {% include 'profiles/partials/_friendship_request_form.html' with id=profile.user.id %}
     {% endif %}
 
-    <!--Action is what should happen after submit -->
     <div>
         <p>{{profile.first_name }} {{profile.last_name}}</p>
         <p>{{profile.user.email}}</p>
