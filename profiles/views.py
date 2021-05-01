@@ -165,7 +165,6 @@ class FriendshipSuggestionIndexView(LoginRequiredMixin, generic.ListView):
            friend.mutual_friends = get_mutual_friends(user, friend.user)
         return friend_suggestions
 
-    # TODO: Complete this friendship suggestion function
 
 
 @login_required

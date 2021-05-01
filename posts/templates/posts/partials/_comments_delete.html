@@ -1,23 +1,25 @@
 
 <!-- Trigger/Open The Modal -->
-<button id="myBtn" class="btn btn-danger align-self-end">Delete</button>
+<button id="myBtn" data-comment-id="{{id}}" class="btn btn-danger align-self-end delete-comment-button">Delete</button>
 
 <!-- The Modal -->
-<div id="myModal" class="modal">
+<div id="delete_comment_modal_{{id}}" class="modal">
 
   <!-- Modal content -->
   <div class="modal-content">
     <span class="close">&times;</span>
     <p>Are you sure you want to delete?</p>
+
+    <form class="delete-comment-form" method="post" action="/posts/{{id}}/{{type}}/reaction/">
+    {% csrf_token %}
+
+    <button class="btn btn-danger"  type="submit">Yes</button>
+    <button class="btn btn secondary">No</button>
+    </form>
+
   </div>
 
 </div>
 
-<!--<form method="post" action="/posts/{{id}}/{{type}}/reaction/">-->
-<!--    {% csrf_token %}-->
 
-<!--    <button  class="btn btn-danger"  type="submit">-->
-<!--        Delete Comment-->
-<!--    </button>-->
-<!--</form>-->
 

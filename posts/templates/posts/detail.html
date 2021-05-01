@@ -35,7 +35,7 @@
 
     {% if comment.author == user %}
 
-    {% include 'posts/partials/_comments_delete.html' %}
+    {% include 'posts/partials/_comments_delete.html' id=comment.id type="comment"  %}
 
     {% endif %}
     </div>
