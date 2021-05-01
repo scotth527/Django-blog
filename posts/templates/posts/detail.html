@@ -35,7 +35,8 @@
 
     {% if comment.author == user %}
 
-    {% include 'posts/partials/_comments_delete.html' id=comment.id type="comment"  %}
+
+    {% include 'posts/partials/_comments_delete.html' with id=comment.id type="comment"  %}
 
     {% endif %}
     </div>
@@ -48,4 +49,5 @@
 {% block js_block %}
     <script src="{% static 'posts/js/main.js' %}"></script>
     {% include 'posts/partials/_toggle_reaction_js.html' %}
+    {% include 'posts/partials/_comments_delete_js.html' %}
 {% endblock %}

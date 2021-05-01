@@ -1,23 +1,46 @@
 <script>
     const DELETE_COMMENT_BUTTONS = document.getElementsByClassName('delete-comment-button');
+    const DELETE_COMMENT_MODALS = document.getElementsByClassName('delete-comment-modal');
     const DELETE_COMMENT_FORMS = document.getElementsByClassName('delete-comment-form');
 
-    let toggleModal = () => {
-
+    let toggleModal = (modal) => {
+        console.log("Toggling!");
+        modal.classList.toggle("open");
+        console.log("It worked!");
     }
 
-    let deleteComment = () => {
+    let deleteComment = (e) => {
+        e.preventDefault();
+
+
+<!--        $.ajax({-->
+<!--            type: 'POST',-->
+<!--            url:  `{% url 'posts:delete-comment' post_id=9998 %}`.replace(9998, id),-->
+<!--            data: serializedData,-->
+<!--            success: function (response) {-->
+
+<!--                {% comment "close modal" %}{% endcomment %}-->
+<!--                toggleModal();-->
+<!--            },-->
+<!--            error: function (response) {-->
+<!--                // alert the error if any error occured-->
+<!--                alert(response["responseJSON"]["error"]);-->
+<!--            }-->
+<!--        })-->
+
 
     }
 
     for (let i = 0; i < DELETE_COMMENT_BUTTONS.length; i++) {
         let button = DELETE_COMMENT_BUTTONS[i];
+        console.log("BUtton", button);
         button.onclick = toggleModal;
     }
 
     for (let i = 0; i < DELETE_COMMENT_FORMS.length; i++) {
         let button = DELETE_COMMENT_BUTTONS[i];
-        button.onclick = toggleModal;
+
+        button.onclick = ()=>toggleModal(DELETE_COMMENT_MODALS[i]);
     }
 
 
