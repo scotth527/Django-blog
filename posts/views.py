@@ -17,6 +17,7 @@ from django.views.generic.edit import ModelFormMixin, DeleteView, UpdateView
 from posts.forms import PostsForm, CommentsForm, ReactionsForm, PostUpdateForm
 from django.contrib import messages
 from utils.dictionary_utils import check_existing_dictionary_in_list
+from django.contrib.messages.views import SuccessMessageMixin
 import pdb
 from django.db.models.expressions import Case, When, Value, Exists
 from django.db.models import Count, Q
@@ -190,14 +191,16 @@ def create_comment(request, post_id):
 
         return render(request, 'posts/index.html', {'form': form})
 
-class CommentsDeleteView(LoginRequiredMixin, UserIsAuthorMixin, generic.DeleteView):
+class CommentsDeleteView(LoginRequiredMixin, UserIsAuthorMixin, SuccessMessageMixin, generic.DeleteView):
     # specify the model you want to use
     model = Comment
-    # can specify success url
-    # url to redirect after successfully
-    # deleting object
-    success_url = "/"
+    success_message = "Commend was deleted successfully"
 
+    def get_success_url(self):
+        post_id = self.get_object().post.id
+        return reverse("posts:detail", kwargs={"pk": post_id})
 
+    def get_success_message(self, cleaned_data):
+        return self.success_message
 
-    # TODO: functionality for this path
+    # TODO: Show success message

@@ -1,53 +1,31 @@
 
 <!-- Trigger the modal with a button -->
-<button type="button" class="btn btn-danger" data-toggle="modal" data-target="delete_comment_modal_{{id}}">Open Modal</button>
+<button type="button" class="btn btn-danger align-self-end" data-bs-toggle="modal" data-bs-target="#delete_comment_modal_{{id}}">
+  Delete Comment
+</button>
 
 <!-- Modal -->
-<div id="delete_comment_modal_{{id}}" class="modal fade" role="dialog">
+<div id="delete_comment_modal_{{id}}" class="modal fade" tabindex="-1" role="dialog">
   <div class="modal-dialog">
 
     <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title">Modal Header</h4>
+        <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
+
       </div>
-      <div class="modal-body">
+      <div class="modal-body d-flex flex-column align-items-center">
          <p>Are you sure you want to delete?</p>
     <form class="delete-comment-form" method="post" action="{% url 'posts:delete-comment' id %}">
     {% csrf_token %}
 
     <button class="btn btn-danger"  type="submit">Yes</button>
-    <button class="btn btn secondary">No</button>
+    <button class="btn btn-secondary" data-bs-dismiss="modal">No</button>
     </form>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-danger"  type="submit">Yes</button>
-        <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<!-- Trigger the modal with a button -->
-<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>
-
-<!-- Modal -->
-<div id="myModal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Modal Header</h4>
-      </div>
-      <div class="modal-body">
-        <p>Some text in the modal.</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
 
