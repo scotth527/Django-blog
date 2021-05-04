@@ -194,13 +194,10 @@ def create_comment(request, post_id):
 class CommentsDeleteView(LoginRequiredMixin, UserIsAuthorMixin, SuccessMessageMixin, generic.DeleteView):
     # specify the model you want to use
     model = Comment
-    success_message = "Commend was deleted successfully"
+    success_message = "Comment was deleted successfully"
 
     def get_success_url(self):
         post_id = self.get_object().post.id
+        messages.success(self.request, self.success_message)
         return reverse("posts:detail", kwargs={"pk": post_id})
 
-    def get_success_message(self, cleaned_data):
-        return self.success_message
-
-    # TODO: Show success message
