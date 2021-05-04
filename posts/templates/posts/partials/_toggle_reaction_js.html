@@ -19,10 +19,7 @@
 
     let toggleLike = (e, id, type) => {
 
-        console.log("Id", id, "type", type);
-
         let serializedData = $(e).serialize();
-        console.log("Serialized data", serializedData);
 
         //Check button's current status
         let currentLikeStatus = document.getElementById(`reaction__button__${id}`).textContent == "Like";
@@ -41,7 +38,7 @@
 
             },
             error: function (response) {
-                // alert the error if any error occured
+                // alert the error if any error occurred
                 alert(response["responseJSON"]["error"]);
             }
         })
@@ -53,7 +50,6 @@
 
 <!--    Assign the on submits -->
     reaction_forms.each((i, form)=>{
-        console.log("Form", form);
         let reaction_id = $(form).data('reactionId');
         let post_type = $(form).data('postType');
         $(form).submit((e)=> {
