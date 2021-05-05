@@ -47,3 +47,12 @@ div#page-container {
     min-height: 100vh;
 }
 
+.autocomplete {
+    z-index: 99;
+    position: absolute;
+}
+
+.autocomplete > li:hover {
+    background: gray;
+    color:white;
+}
