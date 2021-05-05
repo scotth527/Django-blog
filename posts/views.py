@@ -79,9 +79,6 @@ class PostsDetailView(LoginRequiredMixin,generic.DetailView):
             Excludes any questions that aren't published yet.
             """
             post = Post.objects.filter(pub_date__lte=timezone.now())
-            user_reaction = Reaction.objects.filter(
-                user=self.request.user,
-            )
 
             post = post.annotate(is_liked_by_user=Count('reactions__reaction', filter=Q(reactions__user=self.request.user)))
             return post
@@ -130,10 +127,8 @@ def toggle_reaction(request, object_id, object_type):
             user_reaction.delete()
 
         updated_count = object.reactions.count()
-        print("Updated counts", updated_count)
         return JsonResponse({"object_reaction_count": updated_count}, status=200)
     else:
-        print("Request.method", request.method, object)
         return JsonResponse({"error": ""}, status=400)
 
 
@@ -156,7 +151,7 @@ def create_post(request):
             # redirect to a new URL:
             return redirect('posts:index')
         else:
-            print("Form Invalid", request.POST)
+            messages.error(request, "Error")
 
     # if a GET (or any other method) we'll create a blank form
     else:
@@ -184,7 +179,7 @@ def create_comment(request, post_id):
                 # redirect to a new URL:
                 return redirect(reverse('posts:detail', args=(post.id,)))
             else:
-                print("Form Invalid", request.POST)
+                messages.error(request, "Error")
 
     else:
         form = PostsForm()
