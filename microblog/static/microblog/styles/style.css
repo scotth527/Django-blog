@@ -47,12 +47,34 @@ div#page-container {
     min-height: 100vh;
 }
 
+/** Search autocomplete
+========================================================================================================**/
+input#id_q {
+    height: 100%;
+}
+
+.autocomplete-container {
+    position: relative;
+    margin-right: 1rem;
+}
+
 .autocomplete {
-    z-index: 99;
+    z-index : 99;
     position: absolute;
+    list-style-type: none;
+    width: 100%;
+    background: white;
+    padding: 0;
+    border-bottom-left-radius: .25rem;
+    border-bottom-right-radius: .25rem;
+}
+
+.autocomplete > li {
+    padding: 0.8rem;
+    border-bottom: 1px solid #d4d4d4;
 }
 
 .autocomplete > li:hover {
     background: gray;
-    color:white;
+    color: white;
 }
