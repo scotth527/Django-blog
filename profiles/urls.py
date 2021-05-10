@@ -11,6 +11,7 @@ urlpatterns = [
     url( r'^login/$', views.signin, name="login"),
     url( r'^logout/$', views.logout_view, name="logout"),
     url(r'search/$', login_required(basic_search), name='basic_search'),
+    url(r'search-autocomplete/$', views.user_search_autocomplete, name='autocomplete'),
     # path('<str:keyword>/search', views.SearchUserIndexView.as_view(), name='user-search'),
     path('<int:requestee_id>/friend-request', views.request_friendship, name='friend-request'),
     path('<int:pk>/', include([

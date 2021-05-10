@@ -1,0 +1,37 @@
+<script>
+    let searchBox = $('#id_q');
+    let autocompleteContainer = $('#autocomplete-suggestions');
+    let searchForm = $('#user-search');
+
+    searchBox.keyup((e)=> {
+        console.log("E", e.target.value)
+        if (!e.target.value) {
+            autocompleteContainer.addClass('d-none')
+        } else {
+            autocompleteContainer.removeClass('d-none')
+        }
+        clearTimeout(timeout);
+        timeout = setTimeout(() => onSearch(e.target.value), 800);
+    })
+
+    let onSearch = ()=> {
+
+        let serializedData =searchForm.serialize();
+
+        $.ajax({
+            type: 'GET',
+            url:  `{% url 'profiles:autocomplete' %}`,
+            data: serializedData,
+            success: function (response) {
+                console.log("Testing response", response)
+
+            },
+            error: function (response) {
+                // alert the error if any error occurred
+                alert(response["responseJSON"]["error"]);
+            }
+        })
+
+
+    }
+</script>

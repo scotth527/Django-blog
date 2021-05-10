@@ -18,6 +18,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.db import IntegrityError
 from profiles.utils.mixins import UserIsRequesteeMixin, UserIsRequesteeOrRequesterMixin
 from profiles.utils.utils import get_friendlist, get_friend_suggestions, get_mutual_friends, check_friendship_status
+import simplejson as json
 from haystack.query import SearchQuerySet
 import pdb
 
@@ -209,23 +210,12 @@ class FriendshipDeleteView(LoginRequiredMixin, UserIsRequesteeOrRequesterMixin, 
     def get_success_url(self):
         return reverse("profiles:friend-list", kwargs={"pk": self.request.user.id})
 
-class SearchUserIndexView(LoginRequiredMixin, generic.ListView):
-    """
-    Returns a list of friends
-    """
-    template_name = 'profiles/search_result.html'
-    context_object_name = 'search_result'
-    form_class = FriendshipRequestForm
-
-    def get_context_data(self, **kwargs):
-        # Call the base implementation first to get the context
-        context = super(FriendshipIndexView, self).get_context_data(**kwargs)
-        # Create any data and add it to the context
-        context['form'] = self.form_class
-
-        return context
-
-    def get_queryset(self):
-        """Return the user's friendlist."""
-        search_value = self.kwargs["pk"]
-        return get_friendlist(user)
+def user_search_autocomplete(request):
+    sqs = SearchQuerySet().autocomplete(content_auto=request.GET.get('q', ''))[:5]
+    suggestions = [result.title for result in sqs]
+    # Make sure you return a JSON object, not a bare list.
+    # Otherwise, you could be vulnerable to an XSS attack.
+    the_data = json.dumps({
+        'results': suggestions
+    })
+    return HttpResponse(the_data, content_type='application/json')
