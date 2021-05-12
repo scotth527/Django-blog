@@ -1,9 +1,11 @@
 <script>
+    alert("Hey there brother!");
+
     let searchBox = $('#id_q');
     let autocompleteContainer = $('#autocomplete-suggestions');
     let searchForm = $('#user-search');
 
-    searchBox.keyup((e)=> {
+    searchBox.keyup( (e)=> {
         console.log("E", e.target.value)
         if (!e.target.value) {
             autocompleteContainer.addClass('d-none')
@@ -14,7 +16,7 @@
         timeout = setTimeout(() => onSearch(e.target.value), 800);
     })
 
-    let onSearch = ()=> {
+    let onSearch = () => {
 
         let serializedData =searchForm.serialize();
 
