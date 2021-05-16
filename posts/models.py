@@ -43,3 +43,9 @@ class Comment(models.Model):
     def __str__(self):
         return self.comment_body
 
+class Tag(models.Model):
+    tag = models.CharField(max_length=200)
+    posts = models.ManyToManyField(Post)
+
+    def __str__(self):
+        return self.tag
